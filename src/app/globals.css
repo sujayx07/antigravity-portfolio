@@ -1,0 +1,297 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e8e8e8;
+  --color-gray-500: #888888;
+  --color-gray-800: #1a1a1a;
+  --color-gray-900: #111111;
+}
+
+/* ========== RESET & BASE ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+}
+
+body {
+  background: var(--color-white);
+  color: var(--color-black);
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide cursor on all interactive elements too */
+a, button, input, textarea, select, [role="button"] {
+  cursor: none;
+}
+
+/* Custom monochromatic focus state for accessibility */
+*:focus-visible {
+  outline: 1px solid var(--color-gray-500);
+  outline-offset: 4px;
+}
+
+/* ========== NOISE TEXTURE OVERLAY ========== */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: screen; 
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ========== SELECTION ========== */
+::selection {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Better pill button */
+.pill-button-luxe {
+  @apply relative px-8 py-3 rounded-full border border-black/10 font-ui text-[10px] uppercase tracking-[0.2em] font-medium overflow-hidden transition-all duration-500;
+}
+
+.pill-button-luxe::before {
+  content: "";
+  @apply absolute inset-0 bg-black scale-x-0 origin-left transition-transform duration-500;
+}
+
+.pill-button-luxe:hover::before {
+  @apply scale-x-100;
+}
+
+.pill-button-luxe:hover {
+  @apply text-white border-black delay-150;
+}
+
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* ========== SECTION BASE STYLES ========== */
+.section-white {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+.section-black {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+/* ========== UNDERLINE DRAW ANIMATION ========== */
+.underline-draw {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-draw::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.underline-draw:hover::after {
+  transform: scaleX(1);
+}
+
+.underline-draw:not(:hover)::after {
+  transform-origin: right;
+}
+
+/* ========== PILL BUTTON FILL ========== */
+.pill-button {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid currentColor;
+  background: transparent;
+  transition: color 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.pill-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: -1;
+}
+
+.pill-button:hover::after {
+  transform: scaleX(1);
+}
+
+/* ========== SHIMMER TEXT ========== */
+.shimmer-text {
+  background: linear-gradient(90deg, #fff 0%, #888 40%, #fff 60%, #888 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shimmer-text:hover {
+  animation: shimmer 0.8s ease-in-out;
+}
+
+/* ========== BENTO GRID SPOTLIGHT ========== */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* ========== MOBILE: DISABLE CUSTOM CURSOR ========== */
+@media (hover: none) {
+  body,
+  a, button, input, textarea, select, [role="button"] {
+    cursor: auto;
+  }
+}
+
+/* ========== REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+/* ========== TYPOGRAPHY UTILS ========== */
+.text-hero {
+  font-size: clamp(2.5rem, 10vw, 10rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.text-section-title {
+  font-size: clamp(2rem, 8vw, 8rem);
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.text-watermark {
+  font-size: clamp(3rem, 8vw, 10vw);
+  font-weight: 300;
+  opacity: 0.06;
+}
+
+/* ========== GLOBE CSS ========== */
+.globe-container {
+  perspective: 800px;
+}
+
+.globe {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  transform-style: preserve-3d;
+  animation: globe-rotate 20s linear infinite;
+}
+
+.globe::before,
+.globe::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.globe::before {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-width: 1px;
+  border-style: dashed;
+}
+
+.globe::after {
+  width: 60%;
+  height: 100%;
+  top: 0;
+  left: 20%;
+  border-width: 1px;
+  border-style: dashed;
+}
+
+.globe-line {
+  position: absolute;
+  width: 100%;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+  left: 0;
+}
+
+@keyframes globe-rotate {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
