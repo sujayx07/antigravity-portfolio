@@ -293,41 +293,51 @@ export default function About() {
           </SpotlightCard>
 
           {/* Bottom Right: Roles & Currently building */}
-          <SpotlightCard className="md:col-span-4 md:row-span-2 w-full h-full flex flex-col justify-between gap-6 p-6 md:p-8">
+          <SpotlightCard className="md:col-span-4 md:row-span-2 w-full h-full flex flex-col justify-between pt-6 pb-6 md:pt-8 md:pb-8 px-6 md:px-8">
             <div className="w-full">
-              <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-4">
+              <p className="font-mono text-[11px] md:text-xs text-white/40 tracking-[0.25em] uppercase font-bold mb-4 flex items-center gap-3">
+                <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-sm bg-[#00ffc3]/40" />
                 Active Roles
               </p>
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-3">
                 {[
                   "Google Gemini Campus Ambassador",
                   "Tech Co-Lead @ Samarth",
-                  
                 ].map((role) => (
-                  <span
-                    key={role}
-                    className="font-sans text-xs md:text-sm tracking-wide text-white/80 bg-white/5 border border-white/10 rounded-lg px-4 py-2 hover:bg-white/10 transition-colors w-fit"
-                  >
-                    {role}
-                  </span>
+                  <div key={role} className="flex items-center gap-3 group cursor-default">
+                    <span className="text-white/20 group-hover:text-[#00ffc3] transition-colors duration-300 font-mono text-sm">▹</span>
+                    <span className="font-sans font-light text-[14px] md:text-[15px] tracking-wide text-white/70 group-hover:text-white transition-colors duration-300">
+                      {role}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
             
-            <div className="w-full">
-              <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-4">
+            <div className="w-full mt-auto pt-6 md:pt-8">
+              <p className="font-mono text-[11px] md:text-xs text-white/40 tracking-[0.25em] uppercase font-bold mb-4 flex items-center gap-3">
+                <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-sm bg-[#00ffc3]/40" />
                 Currently Building
               </p>
               <div className="flex flex-col gap-3">
                 {["CipherClash", "InsightAI"].map((project) => (
                   <div
                     key={project}
-                    className="flex items-center gap-3 group md:cursor-pointer"
+                    className="flex justify-between items-center group cursor-default px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.06] hover:border-white/10 transition-all duration-300"
                   >
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00ffc3] shadow-[0_0_10px_rgba(0,255,195,0.6)] group-hover:scale-150 transition-transform duration-300" />
-                    <span className="font-display text-xl text-white/80 group-hover:text-white transition-colors duration-300 italic">
-                      {project}
-                    </span>
+                    <div className="flex items-center gap-4">
+                      <div className="relative flex h-2 w-2 shadow-[0_0_8px_rgba(0,255,195,0.8)] rounded-full">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ffc3] opacity-50"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00ffc3]"></span>
+                      </div>
+                      <span className="font-display text-[1.15rem] md:text-xl tracking-wide text-white/80 group-hover:text-white transition-colors duration-300 italic">
+                        {project}
+                      </span>
+                    </div>
+                    {/* Minimalist reveal arrow */}
+                    <div className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
+                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-[#00ffc3]/80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </div>
                   </div>
                 ))}
               </div>
