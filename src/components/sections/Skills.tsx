@@ -6,6 +6,7 @@ import { motion, useInView } from "framer-motion";
 import { marqueeText } from "@/lib/data";
 import Marquee from "@/components/ui/Marquee";
 import SectionTransition from "@/components/ui/SectionTransition";
+import { ShootingStars } from "@/components/ui/shooting-stars";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, useTexture } from "@react-three/drei";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
@@ -37,7 +38,7 @@ const imageUrls = [
 const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
 
 const spheres = [...Array(30)].map(() => ({
-  scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
+  scale: [0.5, 0.7, 0.55, 0.7, 0.7][Math.floor(Math.random() * 5)],
 }));
 
 type SphereProps = {
@@ -178,15 +179,82 @@ export default function Skills() {
       id="skills"
       className="section-black relative py-20 md:py-32 overflow-hidden flex flex-col justify-center"
     >
-      <div className="relative w-full h-[70vh] min-h-[500px] md:h-screen md:min-h-[700px] flex items-center justify-center">
+      {/* Background with shooting stars and a teal radial gradient */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,255,195,0.06)_0%,rgba(0,0,0,0)_70%)]" />
+        <div 
+          className="absolute inset-0 opacity-40 mix-blend-screen" 
+          style={{
+            backgroundImage: `radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.5), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, rgba(0,255,195,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.6), rgba(0,0,0,0))`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "200px 200px"
+          }}
+        />
+        <ShootingStars
+          starColor="#00ffc3"
+          trailColor="rgba(255, 255, 255, 0.2)"
+          minSpeed={15}
+          maxSpeed={35}
+          minDelay={1000}
+          maxDelay={3000}
+        />
+        <ShootingStars
+          starColor="#ffffff"
+          trailColor="#00ffc3"
+          minSpeed={20}
+          maxSpeed={40}
+          minDelay={2000}
+          maxDelay={5000}
+        />
+      </div>
+
+      {/* 3D Tech Stack Canvas (Interactive overlay) filling the ENTIRE section */}
+      <div 
+        className="absolute inset-0 z-20 w-full h-full cursor-grab active:cursor-grabbing"
+        data-cursor-expand
+      >
+        <Canvas
+          shadows
+          gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+          camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
+          onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
+          className="w-full h-full"
+        >
+          <ambientLight intensity={1} />
+          <spotLight
+            position={[20, 20, 25]}
+            penumbra={1}
+            angle={0.2}
+            color="white"
+            castShadow
+            shadow-mapSize={[512, 512]}
+          />
+          <directionalLight position={[0, 5, -4]} intensity={2} />
+          
+          <Suspense fallback={null}>
+            <TechStackInner isActive={inView} />
+            <Environment
+              files="/models/char_enviorment.hdr"
+              environmentIntensity={0.5}
+              environmentRotation={[0, 4, 2]}
+            />
+          </Suspense>
+          
+          <EffectComposer enableNormalPass={false}>
+            <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />
+          </EffectComposer>
+        </Canvas>
+      </div>
+
+      <div className="relative w-full h-[70vh] min-h-[500px] md:h-screen md:min-h-[700px] flex items-center justify-center pointer-events-none">
         
         {/* Subtle Background Glow */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] md:w-[250px] md:h-[250px] bg-[#d3a1ff]/30 rounded-full blur-[80px] md:blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] md:w-[250px] md:h-[250px] bg-[#d3a1ff]/30 rounded-full blur-[80px] md:blur-[120px]" />
 
         {/* Center Title */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] z-0 pointer-events-none text-center w-full px-4">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] z-0 text-center w-full px-4">
           <motion.h2
-            className="text-[10vw] md:text-[7vw] font-display text-white whitespace-nowrap uppercase tracking-wider font-light"
+            className="text-[10vw] md:text-[7vw] font-display whitespace-nowrap uppercase tracking-wider font-light bg-gradient-to-b from-white to-white/20 bg-clip-text text-transparent"
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -195,48 +263,10 @@ export default function Skills() {
             My Techstack
           </motion.h2>
         </div>
-
-        {/* 3D Tech Stack Canvas (Interactive overlay) */}
-        <div 
-          className="absolute inset-0 z-10 w-full h-full cursor-grab active:cursor-grabbing mt-10 md:mt-20"
-          data-cursor-expand
-        >
-          <Canvas
-            shadows
-            gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
-            camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
-            onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
-            className="w-full h-full"
-          >
-            <ambientLight intensity={1} />
-            <spotLight
-              position={[20, 20, 25]}
-              penumbra={1}
-              angle={0.2}
-              color="white"
-              castShadow
-              shadow-mapSize={[512, 512]}
-            />
-            <directionalLight position={[0, 5, -4]} intensity={2} />
-            
-            <Suspense fallback={null}>
-              <TechStackInner isActive={inView} />
-              <Environment
-                files="/models/char_enviorment.hdr"
-                environmentIntensity={0.5}
-                environmentRotation={[0, 4, 2]}
-              />
-            </Suspense>
-            
-            <EffectComposer enableNormalPass={false}>
-              <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />
-            </EffectComposer>
-          </Canvas>
-        </div>
       </div>
 
       {/* Full-width Marquee at bottom */}
-      <div className="border-t border-b border-white/10 py-5 pointer-events-none mt-auto">
+      <div className="relative z-10 border-t border-b border-white/10 py-5 pointer-events-none mt-auto">
         <Marquee text={marqueeText} velocityBased className="text-white" />
       </div>
 

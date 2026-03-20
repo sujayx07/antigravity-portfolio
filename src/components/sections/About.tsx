@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useCounter } from "@/lib/utils";
 import SectionTransition from "@/components/ui/SectionTransition";
+import { ShootingStars } from "@/components/ui/shooting-stars";
 
 // 21st.dev Word-by-word blur reveal
 function BlurReveal({
@@ -184,12 +185,41 @@ export default function About() {
   return (
     <section
       id="about"
-      className="section-black relative py-20 md:py-32 overflow-hidden"
+      className="section-black relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden"
     >
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+      {/* Background with shooting stars and a teal radial gradient */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,255,195,0.06)_0%,rgba(0,0,0,0)_70%)]" />
+        <div 
+          className="absolute inset-0 opacity-40 mix-blend-screen" 
+          style={{
+            backgroundImage: `radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.5), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, rgba(0,255,195,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.6), rgba(0,0,0,0))`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "200px 200px"
+          }}
+        />
+        <ShootingStars
+          starColor="#00ffc3"
+          trailColor="rgba(255, 255, 255, 0.2)"
+          minSpeed={15}
+          maxSpeed={35}
+          minDelay={1000}
+          maxDelay={3000}
+        />
+        <ShootingStars
+          starColor="#ffffff"
+          trailColor="#00ffc3"
+          minSpeed={20}
+          maxSpeed={40}
+          minDelay={2000}
+          maxDelay={5000}
+        />
+      </div>
+
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
         {/* Section title */}
         <motion.h2
-          className="text-section-title font-display italic text-white mb-16"
+          className="text-section-title font-display italic mb-12 md:mb-20 bg-gradient-to-b from-white to-white/20 bg-clip-text text-transparent"
           initial={{ x: -60, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true }}
@@ -199,70 +229,73 @@ export default function About() {
         </motion.h2>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 auto-rows-min">
           {/* Cell A — Bio (col 1-7, row 1-2) */}
-          <SpotlightCard className="md:col-span-7 md:row-span-2">
-            <h3 className="font-ui text-lg font-bold tracking-wide text-white mb-1">
+          <SpotlightCard className="md:col-span-7 md:row-span-2 flex flex-col justify-end">
+            <h3 className="font-display italic text-3xl md:text-4xl tracking-wide text-white mb-2">
               Sujay Dey
             </h3>
-            <p className="font-mono text-xs text-white/50 tracking-wider mb-6 uppercase">
-              Creative Frontend Developer · Full-Stack Engineer
+            <p className="font-mono text-xs text-[#00ffc3]/70 tracking-widest mb-8 uppercase">
+              Creative Frontend Developer &middot; Full-Stack Engineer
             </p>
-            <div className="font-display text-base md:text-lg text-white/80 leading-relaxed">
-              <BlurReveal text="B.Tech CSE (IoT) student at Techno Main Salt Lake. Full-Stack Developer obsessed with building experiences that feel alive. Google Gemini Campus Ambassador. 6× Hackathon winner. Open source contributor. I write code that ships." />
+            <div className="font-sans font-light text-base md:text-xl text-white/80 leading-relaxed max-w-2xl">
+              <BlurReveal text="B.Tech CSE (IoT) student at Techno Main Salt Lake. Full-Stack Developer obsessed with building experiences that feel alive. Google Gemini Campus Ambassador. 6x Hackathon winner. Open source contributor. I write code that ships." />
             </div>
           </SpotlightCard>
 
           {/* Cell B — Rotating skill tags (col 7-13, row 1) */}
-          <SpotlightCard className="md:col-span-5 h-[280px] md:h-auto flex items-center justify-center">
-            <div className="relative w-full h-full flex items-center justify-center">
+          <SpotlightCard className="md:col-span-5 min-h-[260px] md:min-h-[300px] flex items-center justify-center">
+            <div className="relative w-full h-full flex items-center justify-center scale-90 md:scale-100">
               {/* Inner subtle glow for the orbital center */}
-              <div className="absolute w-16 h-16 rounded-full bg-white/5 blur-[30px]" />
+              <div className="absolute w-20 h-20 rounded-full bg-white/5 blur-[30px]" />
               {skillTags.map((tag, i) => (
                 <OrbitTag
                   key={tag}
                   label={tag}
                   delay={-(i * 2)}
-                  duration={12 + (i % 2) * 4}
-                  radius={70 + i * 15}
+                  duration={14 + (i % 2) * 6}
+                  radius={75 + i * 16}
                 />
               ))}
-              <span className="font-mono text-[10px] text-white/50 tracking-[0.3em] uppercase z-0 border border-white/10 rounded-full w-12 h-12 flex items-center justify-center bg-black/50 backdrop-blur-md">
+              <span className="font-mono text-[10px] text-[#00ffc3]/50 tracking-[0.3em] uppercase z-0 border border-white/10 rounded-full w-14 h-14 flex items-center justify-center bg-black/80 backdrop-blur-md shadow-[0_0_30px_rgba(0,255,195,0.1)]">
                 CORE
               </span>
             </div>
           </SpotlightCard>
 
           {/* Cell C — Location (col 8-10, row 2) */}
-          <SpotlightCard className="md:col-span-3 flex flex-col justify-between">
+          <SpotlightCard className="md:col-span-3 flex flex-col justify-between min-h-[220px]">
             <div>
-              <p className="font-mono text-xs text-white/50 tracking-wider uppercase mb-1">
+              <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-2">
                 Location
               </p>
               <p className="font-display text-2xl text-white italic">
                 Kolkata, IN
               </p>
-              <p className="font-mono text-[10px] text-white/40 mt-1 uppercase tracking-widest">
+              <p className="font-mono text-[10px] text-[#00ffc3]/50 mt-1 uppercase tracking-widest">
                 Available Globally
               </p>
             </div>
-            <div className="mt-6 flex justify-end">
+            <div className="mt-4 flex justify-end">
                <WireframeGlobe />
             </div>
           </SpotlightCard>
 
           {/* Cell D — Stats (col 10-13, row 2) */}
-          <SpotlightCard className="md:col-span-2 flex flex-col items-center justify-center gap-8">
-            <CounterCard target={10} label="Hackathon Wins" />
-            <CounterCard target={6} label="First Places" />
+          <SpotlightCard className="md:col-span-2 flex flex-col items-center justify-center gap-10 min-h-[220px]">
+             <div className="w-full h-full flex flex-col items-center justify-center gap-8">
+               <CounterCard target={10} label="Hackathons" />
+               <div className="w-12 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+               <CounterCard target={6} label="First Places" />
+             </div>
           </SpotlightCard>
 
           {/* Cell E — Role cards (col 1-7, row 3) */}
-          <SpotlightCard className="md:col-span-7">
-            <p className="font-mono text-xs text-white/50 tracking-wider uppercase mb-5">
-              Active Roles
+          <SpotlightCard className="md:col-span-7 flex flex-col justify-center min-h-[200px]">
+            <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-6">
+              Active Roles & Contributions
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 md:gap-4">
               {[
                 "Google Gemini Campus Ambassador",
                 "Tech Co-Lead @ Samarth",
@@ -270,7 +303,7 @@ export default function About() {
               ].map((role) => (
                 <span
                   key={role}
-                  className="font-ui text-xs uppercase tracking-wider text-white border border-white/20 rounded-full px-4 py-2"
+                  className="font-sans text-xs md:text-sm tracking-wide text-white/90 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-default"
                 >
                   {role}
                 </span>
@@ -279,18 +312,18 @@ export default function About() {
           </SpotlightCard>
 
           {/* Cell F — Currently building (col 7-13, row 3) */}
-          <SpotlightCard className="md:col-span-5">
-            <p className="font-mono text-xs text-white/50 tracking-wider uppercase mb-5">
+          <SpotlightCard className="md:col-span-5 flex flex-col justify-center min-h-[200px]">
+            <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-6">
               Currently Building
             </p>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {["CipherClash", "InsightAI"].map((project) => (
                 <div
                   key={project}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-4 group cursor-default"
                 >
-                  <div className="w-2 h-2 rounded-full bg-white/60 animate-pulse" />
-                  <span className="font-display text-xl text-white italic">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#00ffc3] shadow-[0_0_10px_rgba(0,255,195,0.6)] group-hover:scale-150 transition-transform duration-300" />
+                  <span className="font-display text-2xl text-white/80 group-hover:text-white transition-colors duration-300 italic">
                     {project}
                   </span>
                 </div>

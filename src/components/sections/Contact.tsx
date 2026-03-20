@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { experiences } from "@/lib/data";
+import { ShootingStars } from "@/components/ui/shooting-stars";
 
 // Wave hover effect on email text
 function WaveEmail({ email }: { email: string }) {
@@ -79,7 +80,36 @@ export default function Contact() {
       id="contact"
       className="section-black relative py-20 md:py-32 min-h-screen flex flex-col justify-center overflow-hidden"
     >
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full">
+      {/* Background with shooting stars and a teal radial gradient */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,255,195,0.06)_0%,rgba(0,0,0,0)_70%)]" />
+        <div 
+          className="absolute inset-0 opacity-40 mix-blend-screen" 
+          style={{
+            backgroundImage: `radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.5), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, rgba(0,255,195,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.6), rgba(0,0,0,0))`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "200px 200px"
+          }}
+        />
+        <ShootingStars
+          starColor="#00ffc3"
+          trailColor="rgba(255, 255, 255, 0.2)"
+          minSpeed={15}
+          maxSpeed={35}
+          minDelay={1000}
+          maxDelay={3000}
+        />
+        <ShootingStars
+          starColor="#ffffff"
+          trailColor="#00ffc3"
+          minSpeed={20}
+          maxSpeed={40}
+          minDelay={2000}
+          maxDelay={5000}
+        />
+      </div>
+
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full relative z-10">
         {/* Experience cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20 md:mb-32">
           {experiences.map((exp, i) => (
