@@ -10,6 +10,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { useScramble } from "@/lib/utils";
+import { HoverButton } from "@/components/ui/hover-glow-button";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -93,13 +94,35 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  
+  // Track viewport height to trigger animation after Hero section ends
+  const [vh, setVh] = useState(800);
+  useEffect(() => {
+    setVh(window.innerHeight);
+    const handleResize = () => setVh(window.innerHeight);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Animation values for the floating profile picture
+  // It stays large [vh] and then shrinks over the next 500px for a smoother transition
+  const imgSize = useTransform(scrollY, [vh, vh + 500], ["400px", "40px"]);
+  const imgY = useTransform(scrollY, [vh, vh + 500], ["30vh", "0vh"]);
+  const imgX = useTransform(scrollY, [vh, vh + 500], ["-10vw", "0vw"]);
+  const imgScale = useTransform(scrollY, [vh, vh + 500], [1, 1]);
+  // Make it a circle only at the end of the animation
+  const imgRadius = useTransform(scrollY, [vh + 300, vh + 500], ["0%", "50%"]);
+
+  // Connect Me button fade and slide
+  const connectOpacity = useTransform(scrollY, [vh + 200, vh + 500], [0, 1]);
+  const connectX = useTransform(scrollY, [vh + 200, vh + 500], [20, 0]);
 
   useEffect(() => {
     const unsubscribe = scrollY.on("change", (v) => {
-      setScrolled(v > 100);
+      setScrolled(v > vh / 2);
     });
     return unsubscribe;
-  }, [scrollY]);
+  }, [scrollY, vh]);
 
   return (
     <>
@@ -126,18 +149,27 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA Button */}
-        <div className="flex items-center gap-6">
-          <div className="hidden md:block">
-            <MagneticItem
-              href="#contact"
-              className="underline-draw font-ui text-xs uppercase tracking-[0.15em] py-2 block"
-              intensity={0.3}
-              data-cursor-hide
-            >
-              Connect Me
-            </MagneticItem>
-          </div>
+        {/* CTA Button & Profile Image */}
+        <div className="flex items-center gap-2 mt-1 md:mt-0">
+          <motion.div 
+            className="hidden md:block"
+            style={{ opacity: connectOpacity, x: connectX }}
+          >
+            <a href="#contact" data-cursor-hide>
+              <HoverButton
+                glowColor="#ffffff"
+                backgroundColor="#000"
+                textColor="#ffffff"
+                hoverTextColor="#ffffff"
+                className="py-2.5 px-6 rounded-full text-xs uppercase tracking-[0.15em] font-ui"
+              >
+                Connect Me
+              </HoverButton>
+            </a>
+          </motion.div>
+
+          {/* Placeholder to reserve space for the extracted absolute image */}
+          <div className="w-10 h-10 hidden md:block" />
 
           {/* Mobile menu button */}
           <button
@@ -164,6 +196,40 @@ export default function Navbar() {
           </button>
         </div>
       </motion.nav>
+
+      {/* Profile Image Container - Independent to avoid mix-blend-mode inversion */}
+      <div className="fixed top-0 right-0 w-full px-6 md:px-10 py-6 md:py-8 z-[105] hidden md:flex items-center justify-end pointer-events-none">
+        <div className="relative w-10 h-10 flex items-center justify-center pointer-events-none">
+          <motion.div
+            style={{
+              width: imgSize,
+              height: imgSize,
+              y: imgY,
+              x: imgX,
+              scale: imgScale,
+              borderRadius: imgRadius,
+              overflow: "hidden",
+            }}
+            className="absolute right-0 top-0 origin-top-right transform-gpu pointer-events-auto"
+          >
+            <motion.div
+              animate={{ y: scrolled ? 0 : [0, -15, 0] }}
+              transition={{ 
+                duration: 4, 
+                repeat: scrolled ? 0 : Infinity, 
+                ease: "easeInOut" 
+              }}
+              className="w-full h-full"
+            >
+              <img
+                src="/dp/profile.png"
+                alt="Sujay Dey"
+                className="w-full h-full object-cover drop-shadow-lg"
+              />
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
 
       {/* Mobile menu */}
       <AnimatePresence mode="wait">
