@@ -7,6 +7,7 @@ export interface Project {
   role: string;
   achievement: string;
   year: string;
+  link?: string;
 }
 
 export interface Achievement {
@@ -30,68 +31,74 @@ export const projects: Project[] = [
   {
     id: 1,
     number: "01",
-    title: "TruthScope",
+    title: "Krishi Drishti",
     description:
-      "Real-time AI-powered fake news detection browser extension. Achieves 98.6% accuracy in credibility scoring using Google Gemini and NLP pipelines.",
-    techStack: ["Gemini API", "NLP", "Chrome Extension", "JavaScript", "Python"],
-    role: "Team Lead & Developer",
-    achievement: "4th Place · Smart Bengal Hackathon 2025 · RCCIIT Grand Finals",
+      "Scalable AI & IoT platform for crop residue management. Integrates machine learning and real-time data pipelines to track agricultural machinery, boosting operational efficiency by 70%. Led a team of 6 to architect predictive analytics and live monitoring dashboards.",
+    techStack: ["Machine Learning", "IoT", "Data Pipelines", "React", "Python"],
+    role: "Team Lead & System Architect",
+    achievement: "National Winner – Smart India Hackathon 2025",
     year: "2025",
+    link: "https://krishidrishti.vercel.app/"
   },
   {
     id: 2,
     number: "02",
-    title: "CipherClash",
+    title: "Bharatiya Decentralized E-Commerce",
     description:
-      "Competitive real-time Bulls & Cows logic puzzle game with ELO leaderboard, PvP/PvE modes, Redis-backed room persistence and NextAuth OAuth.",
-    techStack: ["Next.js 15", "Socket.io", "Redis", "Supabase", "Framer Motion", "Zustand"],
-    role: "Full-Stack Developer",
-    achievement: "AntiGravity Hackathon · 2026",
-    year: "2026",
+      "Blockchain-powered marketplace driven by smart contracts, currently supporting 1000+ distributed sellers. Engineered secure transaction workflows, transparent authentication, and a fully decentralized web3 architecture to guarantee data integrity.",
+    techStack: ["Ethereum", "Solidity", "Web3.js", "React", "Smart Contracts"],
+    role: "Team Lead & Blockchain Developer",
+    achievement: "1st Rank – E-Summit 2024 National Finals",
+    year: "2024",
+    link: "https://bharatiya-ecommerce.vercel.app/"
   },
   {
     id: 3,
     number: "03",
-    title: "InsightAI",
+    title: "Viz.ai",
     description:
-      "Conversational AI for instant Business Intelligence. Type plain English, get interactive dashboards powered by Google Gemini.",
-    techStack: ["Next.js", "Google Gemini", "Tailwind", "Chart.js"],
-    role: "Senior Frontend Lead",
-    achievement: "AntiGravity Hackathon · 2026",
-    year: "2026",
+      "Conversational BI Dashboard Generator. Translates plain English queries into interactive data visualizations with 95%+ accuracy. Built a highly scalable Next.js architecture featuring context retention and CSV-agnostic dynamic chart rendering.",
+    techStack: ["Next.js", "AI Agent powered by Gemini", "Recharts", "Tailwind", "REST APIs"],
+    role: "Full-Stack Developer",
+    achievement: "Winner – GFG Kolkata Hackathon 2025",
+    year: "2025",
+    link: "https://vizlyai.vercel.app/"
   },
   {
     id: 4,
     number: "04",
-    title: "Decentralized Donation Platform",
+    title: "InterVue",
     description:
-      "Web3 platform for transparent donation campaigns on Ethereum blockchain with smart contract-based fund management.",
-    techStack: ["Ethereum", "Web3.js", "React", "Smart Contracts", "Solidity"],
-    role: "Full-Stack & Blockchain Developer",
-    achievement: "1st Place · TMSL Hackathon 2024 · Hack-ur-way",
-    year: "2024",
+      "AI-driven interview preparation platform utilizing real-time voice processing and NLP to evaluate candidate responses with 90% accuracy. Optimized system latency and engineered automated feedback algorithms to simulate realistic interview environments.",
+    techStack: ["NLP", "Voice Processing", "Machine Learning", "React", "Python"],
+    role: "Team Lead & AI Developer",
+    achievement: "1st Rank – Tech AI 2.0 National Hackathon",
+    year: "2025",
+    link: "https://intervuexai.vercel.app/"
   },
   {
     id: 5,
     number: "05",
-    title: "Community E-Commerce",
+    title: "TruthScope",
     description:
-      "Platform connecting local sellers with international markets featuring AI/ML-based product recommendations and India Post shipping integration.",
-    techStack: ["MERN Stack", "ML/AI", "REST APIs", "Node.js", "MongoDB"],
-    role: "Full-Stack Developer & Team Lead",
-    achievement: "1st Place · E-Summit 2024 National Finals · Jadavpur University",
-    year: "2024",
+      "Real-time AI-powered fake news detection browser extension. Achieves 98.6% accuracy in credibility scoring using Google Gemini and NLP pipelines.",
+    techStack: ["Gemma Agent", "NLP", "Chrome Extension", "JavaScript", "Python"],
+    role: "Team Lead & Developer",
+    achievement: "4th Place · Smart Bengal Hackathon 2025 · RCCIIT Grand Finals",
+    year: "2025",
+    link: "https://truth-scope-pro.vercel.app/"
   },
   {
     id: 6,
     number: "06",
-    title: "Space Weather Prediction",
+    title: "CipherClash",
     description:
-      "AI-powered space weather prediction system for satellite protection using ML models and real-time solar activity data feeds.",
-    techStack: ["Python", "ML/AI", "React", "Data Visualization", "APIs"],
-    role: "ML & Frontend Developer",
-    achievement: "Hackathon Project · 2025",
-    year: "2025",
+      "Competitive real-time Bulls & Cows logic puzzle game with ELO leaderboard, PvP/PvE modes, Redis-backed room persistence and NextAuth OAuth.",
+    techStack: ["Next.js", "Socket.io", "Redis", "Supabase", "Framer Motion", "Zustand"],
+    role: "Full-Stack Developer",
+    achievement: "AntiGravity Hackathon · 2026",
+    year: "2026",
+    link: "https://cipher.sujayx07.xyz/"
   },
 ];
 

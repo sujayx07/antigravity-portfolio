@@ -57,10 +57,20 @@ function TiltCard({
   );
 }
 
-// Project detail panel
 function ProjectPanel({ project, direction }: { project: typeof projects[0]; direction: number }) {
   return (
-    <TiltCard className="relative h-full flex flex-col justify-center">
+    <TiltCard className="relative h-full flex flex-col justify-center cursor-pointer group">
+      {/* Invisible Link Overlay */}
+      {project.link && (
+        <a 
+          href={project.link} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="absolute inset-0 z-50 rounded-xl"
+          data-cursor-label="VISIT" // Shows VISIT on custom cursor when hovered
+          aria-label={`Visit project ${project.title}`}
+        />
+      )}
       {/* Large ghost number */}
       <motion.span
         className="absolute top-0 right-0 font-display text-[15vw] md:text-[10vw] font-light text-black/[0.06] leading-none select-none"
@@ -292,6 +302,8 @@ export default function Projects() {
             </AnimatePresence>
           </div>
         </div>
+
+
 
         {/* Mobile: Project cards stacked */}
         <div className="md:hidden w-full px-6 pt-32 pb-20">

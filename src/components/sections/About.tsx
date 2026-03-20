@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { useCounter } from "@/lib/utils";
 import SectionTransition from "@/components/ui/SectionTransition";
 import { ShootingStars } from "@/components/ui/shooting-stars";
+import KolkataTimeCard from "@/components/ui/KolkataTimeCard";
 
 // 21st.dev Word-by-word blur reveal
 function BlurReveal({
@@ -85,36 +86,47 @@ function SpotlightCard({
 // Orbital skill tag perfectly counter-rotating
 function OrbitTag({
   label,
-  delay,
-  duration,
+  delay = 0,
+  duration = 20,
   radius = 110,
 }: {
   label: string;
-  delay: number;
-  duration: number;
+  delay?: number;
+  duration?: number;
   radius?: number;
 }) {
+  const startAngle = (delay / duration) * 360;
+
   return (
-    <motion.div
-      className="absolute top-1/2 left-1/2 flex items-center justify-start pointer-events-none z-10"
-      style={{
-        width: radius * 2,
-        height: 2,
-        marginLeft: -radius,
-        marginTop: -1,
-      }}
-      animate={{ rotate: [0, 360] }}
-      transition={{ duration, repeat: Infinity, ease: "linear", delay }}
-    >
-      {/* Counter rotation keeps the text upright while orbiting */}
+    <>
+      {/* 🟢 VISIBLE SECRETE ORBIT RING */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.04] pointer-events-none"
+        style={{ width: radius * 2, height: radius * 2 }}
+      />
+      
+      {/* 🔵 ROTATING PIVOT CONTAINER */}
       <motion.div
-        className="absolute -left-8 bg-black/80 backdrop-blur-sm px-3 py-1.5 font-mono text-[9px] md:text-[11px] tracking-wider text-white/90 whitespace-nowrap rounded-lg border border-white/10 shadow-[0_4px_12px_rgba(255,255,255,0.05)]"
-        animate={{ rotate: [360, 0] }}
-        transition={{ duration, repeat: Infinity, ease: "linear", delay }}
+        className="absolute top-1/2 left-1/2 flex items-center justify-start pointer-events-none z-10"
+        style={{ width: radius * 2, height: 1, marginLeft: -radius }}
+        initial={{ rotate: startAngle }}
+        animate={{ rotate: [startAngle, startAngle + 360] }}
+        transition={{ duration, repeat: Infinity, ease: "linear" }}
       >
-        {label}
+        {/* 🟣 THE TAG ITSELF (COUNTER-ROTATING to stay completely level!) */}
+        <motion.div
+          className="absolute left-0 w-0 h-0 flex items-center justify-center -translate-x-1/2 pointer-events-none"
+          initial={{ rotate: -startAngle }}
+          animate={{ rotate: [-startAngle, -(startAngle + 360)] }}
+          transition={{ duration, repeat: Infinity, ease: "linear" }}
+        >
+          <div className="bg-black/95 backdrop-blur-xl px-4 py-2 font-mono text-[10px] md:text-xs tracking-widest uppercase text-white/90 whitespace-nowrap rounded-full border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.8)] flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#00ffc3]/80 shadow-[0_0_10px_rgba(0,255,195,0.6)]" />
+            {label}
+          </div>
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </>
   );
 }
 
@@ -229,105 +241,96 @@ export default function About() {
         </motion.h2>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 auto-rows-min">
-          {/* Cell A — Bio (col 1-7, row 1-2) */}
-          <SpotlightCard className="md:col-span-7 md:row-span-2 flex flex-col justify-end">
-            <h3 className="font-display italic text-3xl md:text-4xl tracking-wide text-white mb-2">
+        <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[250px] md:auto-rows-[160px] gap-4 md:gap-6 mt-12 w-full">
+          {/* Top Left: Main Bio Card */}
+          <SpotlightCard className="md:col-span-7 md:row-span-2 flex flex-col justify-end w-full h-full p-8 md:p-10">
+            <h3 className="font-display italic text-4xl md:text-5xl tracking-wide text-white mb-3">
               Sujay Dey
             </h3>
-            <p className="font-mono text-xs text-[#00ffc3]/70 tracking-widest mb-8 uppercase">
+            <p className="font-mono text-xs md:text-sm text-[#00ffc3]/80 tracking-widest mb-8 md:mb-12 uppercase font-bold">
               Creative Frontend Developer &middot; Full-Stack Engineer
             </p>
-            <div className="font-sans font-light text-base md:text-xl text-white/80 leading-relaxed max-w-2xl">
+            <div className="font-sans font-light text-lg md:text-xl text-white/80 leading-relaxed max-w-2xl">
               <BlurReveal text="B.Tech CSE (IoT) student at Techno Main Salt Lake. Full-Stack Developer obsessed with building experiences that feel alive. Google Gemini Campus Ambassador. 6x Hackathon winner. Open source contributor. I write code that ships." />
             </div>
           </SpotlightCard>
 
-          {/* Cell B — Rotating skill tags (col 7-13, row 1) */}
-          <SpotlightCard className="md:col-span-5 min-h-[260px] md:min-h-[300px] flex items-center justify-center">
-            <div className="relative w-full h-full flex items-center justify-center scale-90 md:scale-100">
-              {/* Inner subtle glow for the orbital center */}
-              <div className="absolute w-20 h-20 rounded-full bg-white/5 blur-[30px]" />
+          {/* Top Right: KolkataTimeCard */}
+          <SpotlightCard className="md:col-span-5 md:row-span-2 w-full h-full relative !p-0">
+            <KolkataTimeCard />
+          </SpotlightCard>
+
+          {/* Bottom Left: Skill Orbit Constellation */}
+          <SpotlightCard className="md:col-span-5 md:row-span-2 w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-0">
+            <div className="absolute inset-0 w-full h-full flex items-center justify-center scale-[0.60] sm:scale-75 md:scale-[0.80] lg:scale-95">
+              <div className="absolute w-40 h-40 rounded-full bg-[#00ffc3]/5 blur-[60px]" />
+              
+              {/* Calculate exact mathematical delays so they orbit perfectly spaced like spokes on a wheel */}
               {skillTags.map((tag, i) => (
                 <OrbitTag
                   key={tag}
                   label={tag}
-                  delay={-(i * 2)}
-                  duration={14 + (i % 2) * 6}
-                  radius={75 + i * 16}
+                  delay={i * (24 / skillTags.length)}  // e.g., 0, 4.8, 9.6...
+                  duration={24}  // 24 seconds for one full slow loop
+                  radius={100 + i * 36} // 100, 136, 172, 208, 244
                 />
               ))}
-              <span className="font-mono text-[10px] text-[#00ffc3]/50 tracking-[0.3em] uppercase z-0 border border-white/10 rounded-full w-14 h-14 flex items-center justify-center bg-black/80 backdrop-blur-md shadow-[0_0_30px_rgba(0,255,195,0.1)]">
+
+              {/* Central CORE star */}
+              <span className="shrink-0 font-mono text-[10px] md:text-xs font-bold text-[#00ffc3]/80 tracking-[0.4em] uppercase z-20 border border-[#00ffc3]/20 rounded-full w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-black/60 backdrop-blur-md shadow-[0_0_50px_rgba(0,255,195,0.15)] pl-1 pointer-events-none">
                 CORE
               </span>
             </div>
           </SpotlightCard>
 
-          {/* Cell C — Location (col 8-10, row 2) */}
-          <SpotlightCard className="md:col-span-3 flex flex-col justify-between min-h-[220px]">
-            <div>
-              <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-2">
-                Location
-              </p>
-              <p className="font-display text-2xl text-white italic">
-                Kolkata, IN
-              </p>
-              <p className="font-mono text-[10px] text-[#00ffc3]/50 mt-1 uppercase tracking-widest">
-                Available Globally
-              </p>
-            </div>
-            <div className="mt-4 flex justify-end">
-               <WireframeGlobe />
-            </div>
-          </SpotlightCard>
-
-          {/* Cell D — Stats (col 10-13, row 2) */}
-          <SpotlightCard className="md:col-span-2 flex flex-col items-center justify-center gap-10 min-h-[220px]">
-             <div className="w-full h-full flex flex-col items-center justify-center gap-8">
+          {/* Bottom Middle: Stats */}
+          <SpotlightCard className="md:col-span-3 md:row-span-2 w-full h-full flex flex-col items-center justify-center gap-6 md:gap-8 p-6">
+             <div className="w-full flex md:flex-col items-center justify-between md:justify-center gap-4 md:gap-8 mt-auto md:mt-0">
                <CounterCard target={10} label="Hackathons" />
-               <div className="w-12 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+               <div className="w-px h-12 md:w-16 md:h-px bg-gradient-to-b md:bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                <CounterCard target={6} label="First Places" />
              </div>
           </SpotlightCard>
 
-          {/* Cell E — Role cards (col 1-7, row 3) */}
-          <SpotlightCard className="md:col-span-7 flex flex-col justify-center min-h-[200px]">
-            <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-6">
-              Active Roles & Contributions
-            </p>
-            <div className="flex flex-wrap gap-3 md:gap-4">
-              {[
-                "Google Gemini Campus Ambassador",
-                "Tech Co-Lead @ Samarth",
-                "MLH Open Source Admin",
-              ].map((role) => (
-                <span
-                  key={role}
-                  className="font-sans text-xs md:text-sm tracking-wide text-white/90 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-default"
-                >
-                  {role}
-                </span>
-              ))}
-            </div>
-          </SpotlightCard>
-
-          {/* Cell F — Currently building (col 7-13, row 3) */}
-          <SpotlightCard className="md:col-span-5 flex flex-col justify-center min-h-[200px]">
-            <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-6">
-              Currently Building
-            </p>
-            <div className="space-y-4">
-              {["CipherClash", "InsightAI"].map((project) => (
-                <div
-                  key={project}
-                  className="flex items-center gap-4 group cursor-default"
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#00ffc3] shadow-[0_0_10px_rgba(0,255,195,0.6)] group-hover:scale-150 transition-transform duration-300" />
-                  <span className="font-display text-2xl text-white/80 group-hover:text-white transition-colors duration-300 italic">
-                    {project}
+          {/* Bottom Right: Roles & Currently building */}
+          <SpotlightCard className="md:col-span-4 md:row-span-2 w-full h-full flex flex-col justify-between gap-6 p-6 md:p-8">
+            <div className="w-full">
+              <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-4">
+                Active Roles
+              </p>
+              <div className="flex flex-col gap-2.5">
+                {[
+                  "Google Gemini Campus Ambassador",
+                  "Tech Co-Lead @ Samarth",
+                  
+                ].map((role) => (
+                  <span
+                    key={role}
+                    className="font-sans text-xs md:text-sm tracking-wide text-white/80 bg-white/5 border border-white/10 rounded-lg px-4 py-2 hover:bg-white/10 transition-colors w-fit"
+                  >
+                    {role}
                   </span>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            
+            <div className="w-full">
+              <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-4">
+                Currently Building
+              </p>
+              <div className="flex flex-col gap-3">
+                {["CipherClash", "InsightAI"].map((project) => (
+                  <div
+                    key={project}
+                    className="flex items-center gap-3 group md:cursor-pointer"
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#00ffc3] shadow-[0_0_10px_rgba(0,255,195,0.6)] group-hover:scale-150 transition-transform duration-300" />
+                    <span className="font-display text-xl text-white/80 group-hover:text-white transition-colors duration-300 italic">
+                      {project}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </SpotlightCard>
         </div>

@@ -191,7 +191,7 @@ export default function Contact() {
           transition={{ delay: 0.6, duration: 0.8 }}
         >
           <p className="font-mono text-[11px] text-white/30 tracking-wider">
-            © 2025 Sujay Dey · Built with obsession.
+            © 2025 sujayx07 · Built with obsession.
           </p>
         </motion.div>
       </div>

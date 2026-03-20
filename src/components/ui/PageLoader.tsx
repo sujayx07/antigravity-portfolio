@@ -39,7 +39,7 @@ export default function PageLoader({ onComplete }: { onComplete: () => void }) {
           style={{ transformOrigin: "top" }}
         >
           <motion.div
-            className="font-mono text-white text-4xl md:text-6xl tracking-widest select-none"
+            className="select-none flex items-center justify-center p-8 bg-black"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={
               phase === "logo"
@@ -51,7 +51,11 @@ export default function PageLoader({ onComplete }: { onComplete: () => void }) {
               ease: [0.22, 1, 0.36, 1],
             }}
           >
-            {"{Sx}"}
+            <img 
+              src="/logo/white-sx07.png" 
+              alt="sujayx07 loader logo" 
+              className="w-48 md:w-64 h-auto object-contain"
+            />
           </motion.div>
         </motion.div>
       )}

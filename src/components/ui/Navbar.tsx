@@ -117,11 +117,41 @@ export default function Navbar() {
   const connectOpacity = useTransform(scrollY, [vh + 200, vh + 500], [0, 1]);
   const connectX = useTransform(scrollY, [vh + 200, vh + 500], [20, 0]);
 
+  // Track if we are inside the Projects section
+  const [inProjects, setInProjects] = useState(false);
+
   useEffect(() => {
     const unsubscribe = scrollY.on("change", (v) => {
       setScrolled(v > vh / 2);
     });
-    return unsubscribe;
+
+    // Observer to detect #projects section accurately across layouts
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInProjects(true);
+          } else {
+            setInProjects(false);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -90% 0px" } 
+    );
+
+    const interval = setInterval(() => {
+      const el = document.getElementById("projects");
+      if (el) {
+        observer.observe(el);
+        clearInterval(interval);
+      }
+    }, 500);
+
+    return () => {
+      unsubscribe();
+      observer.disconnect();
+      clearInterval(interval);
+    };
   }, [scrollY, vh]);
 
   return (
@@ -133,14 +163,23 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, delay: 1.8, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Logo */}
-        <a
+        {/* Logo and Brand Name */}
+        <motion.a
           href="#"
-          className="font-display font-bold text-white text-xl tracking-tighter"
+          className="relative flex items-center gap-2 md:gap-3"
           data-cursor-hide
+          animate={{ y: inProjects ? -32 : 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          {"{Sx}"}
-        </a>
+          <img
+            src="/logo/white-sx07.png"
+            alt="Logo"
+            className="h-10 md:h-12 w-auto object-contain"
+          />
+          <span className="font-display font-medium text-white text-2xl md:text-3xl tracking-tighter">
+            sujayx07
+          </span>
+        </motion.a>
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-10 text-white">

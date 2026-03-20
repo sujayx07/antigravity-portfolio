@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     "Portfolio of Sujay Dey — Creative Frontend Developer, Full-Stack Engineer, 6× Hackathon Champion, SIH 2025 National Champion, and Google Gemini Campus Ambassador. Building scalable full-stack applications.",
   keywords: [
     "Sujay Dey",
+    "sujayx07",
     "portfolio",
     "full-stack developer",
     "frontend developer",
