@@ -151,7 +151,7 @@ export const achievements: Achievement[] = [
     side: "right",
   },
   {
-    year: "2024",
+    year: "2026",
     title: "GFG Kolkata Hackathon Winner",
     event: "GeeksForGeeks Kolkata Chapter",
     org: "GeeksForGeeks",
@@ -174,7 +174,7 @@ export const achievements: Achievement[] = [
     event: "On-Campus Competition",
     org: "IIC, TMSL",
     detail: "Global social entrepreneurship competition.",
-    image: "https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?q=80&w=800&auto=format&fit=crop",
+    image: "/achivments/hultprize.webp",
     side: "left",
   },
   {

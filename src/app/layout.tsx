@@ -57,8 +57,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${cormorant.variable} ${syne.variable} ${dmMono.variable}`}
+      suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

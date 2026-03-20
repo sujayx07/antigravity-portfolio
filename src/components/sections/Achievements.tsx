@@ -128,7 +128,7 @@ export default function Achievements() {
     >
       {/* Floating Image Portal */}
       <motion.img
-        src={hoveredImage || ""}
+        src={hoveredImage || "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"}
         className="fixed top-0 left-0 pointer-events-none z-[100] w-auto h-auto max-w-[280px] md:max-w-[350px] max-h-[350px] rounded-xl object-contain shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-white/50 bg-black/80 p-1 mix-blend-normal"
         style={{
           x: smoothX,
