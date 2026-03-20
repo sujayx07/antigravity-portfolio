@@ -44,6 +44,7 @@ export default function Home() {
     if (!showContent) return;
 
     let lenis: any;
+    let rafId: number;
 
     const initLenis = async () => {
       try {
@@ -56,10 +57,10 @@ export default function Home() {
 
         function raf(time: number) {
           lenis.raf(time);
-          requestAnimationFrame(raf);
+          rafId = requestAnimationFrame(raf);
         }
 
-        requestAnimationFrame(raf);
+        rafId = requestAnimationFrame(raf);
       } catch (e) {
         console.warn("Lenis not available, using native scroll");
       }
@@ -70,6 +71,7 @@ export default function Home() {
 
     return () => {
       clearTimeout(timer);
+      if (rafId) cancelAnimationFrame(rafId);
       if (lenis) lenis.destroy();
     };
   }, [showContent]);

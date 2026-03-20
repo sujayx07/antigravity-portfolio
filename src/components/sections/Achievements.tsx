@@ -143,7 +143,12 @@ export default function Achievements() {
         }}
       />
 
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
+
+        {/* Hidden Preload Image Cache - Pre-loads all certificates into VRAM to stop jittering on hover */}
+        <div className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden" aria-hidden="true">
+          {achievements.map((ach) => ach.image && <img key={`preload-${ach.title}`} src={ach.image} alt="" decoding="async" loading="eager" />)}
+        </div>
         {/* Section heading */}
         <motion.h2
           className="text-section-title font-display italic text-black mb-16 md:mb-24"
