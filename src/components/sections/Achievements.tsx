@@ -16,6 +16,23 @@ function AchievementCard({
   setHoveredImage: (img: string | null) => void;
 }) {
   const isLeft = achievement.side === "left";
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // When the card scrolls OUT of view, dismiss the floating image immediately
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setHoveredImage(null);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [setHoveredImage]);
 
   return (
     <div
@@ -34,6 +51,7 @@ function AchievementCard({
 
       {/* Card */}
       <motion.div
+        ref={cardRef}
         className={`relative z-10 w-full md:w-[45%] border border-black/15 rounded-2xl p-6 md:p-8 bg-white group cursor-none overflow-hidden ${
           isLeft ? "md:mr-auto" : "md:ml-auto"
         }`}
