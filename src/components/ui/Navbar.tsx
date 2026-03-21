@@ -97,11 +97,15 @@ export default function Navbar() {
   
   // Track viewport height to trigger animation after Hero section ends
   const [vh, setVh] = useState(800);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    setVh(window.innerHeight);
-    const handleResize = () => setVh(window.innerHeight);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const update = () => {
+      setVh(window.innerHeight);
+      setIsMobile(window.innerWidth < 768);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   // Animation values for the floating profile picture
@@ -168,7 +172,7 @@ export default function Navbar() {
           href="#"
           className="relative flex items-center gap-2 md:gap-3"
           data-cursor-hide
-          animate={{ y: inProjects ? -32 : 0 }}
+          animate={{ y: (!isMobile && inProjects) ? -32 : 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <img
@@ -270,43 +274,72 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Premium Mobile Menu — Full Screen Overlay */}
       <AnimatePresence mode="wait">
         {isMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-[95] bg-black flex flex-col p-10 pt-32 gap-12"
-            initial={{ y: "-100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "-100%" }}
-            transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+            className="fixed inset-0 z-[95] flex flex-col overflow-hidden"
+            style={{ backgroundColor: "#060606" }}
+            initial={{ clipPath: "ellipse(0% 0% at 95% 5%)" }}
+            animate={{ clipPath: "ellipse(150% 150% at 95% 5%)" }}
+            exit={{ clipPath: "ellipse(0% 0% at 95% 5%)" }}
+            transition={{ duration: 0.7, ease: [0.77, 0, 0.175, 1] }}
           >
-            <div className="flex flex-col gap-6">
+            {/* Noise texture overlay */}
+            <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")' }} />
+            
+            {/* Ambient gradient orb */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.04)_0%,transparent_70%)] pointer-events-none" />
+
+            {/* Nav Links */}
+            <div className="flex-1 flex flex-col justify-center px-8 pt-28 gap-2">
               {navLinks.map((link, i) => (
-                <motion.a
-                  key={link.label}
-                  href={link.href}
-                  className="text-white font-display text-[12vw] italic font-light tracking-wide hover:text-white/60 transition-colors"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.08, duration: 0.5 }}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </motion.a>
+                <div key={link.label} className="overflow-hidden border-b border-white/[0.06] last:border-0">
+                  <motion.a
+                    href={link.href}
+                    className="flex items-baseline justify-between py-5 group"
+                    initial={{ y: "120%", opacity: 0 }}
+                    animate={{ y: "0%", opacity: 1 }}
+                    transition={{ delay: 0.25 + i * 0.07, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <span className="font-display text-[11vw] sm:text-7xl italic font-light tracking-tight text-white group-active:text-white/60 transition-colors">
+                      {link.label}
+                    </span>
+                    <span className="font-mono text-[10px] text-white/30 tracking-widest ml-4 group-active:text-white/60 transition-colors">
+                      0{i + 1}
+                    </span>
+                  </motion.a>
+                </div>
               ))}
             </div>
 
-            <div className="mt-auto space-y-4">
-              <p className="font-mono text-[10px] text-white/30 tracking-[0.2em] uppercase">
-                Collaboration
-              </p>
-              <a
-                href="mailto:sujayx07@gmail.com"
-                className="font-mono text-sm text-white/80"
-              >
-                sujayx07@gmail.com
-              </a>
-            </div>
+            {/* Bottom Strip */}
+            <motion.div 
+              className="px-8 pb-12 pt-6 border-t border-white/[0.06] flex items-end justify-between"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.5 }}
+            >
+              <div>
+                <p className="font-mono text-[9px] text-white/30 tracking-[0.25em] uppercase mb-2">
+                  Reach Out
+                </p>
+                <a
+                  href="mailto:sujayx07@gmail.com"
+                  className="font-mono text-sm text-white/70 hover:text-white transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  sujayx07@gmail.com
+                </a>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-[9px] text-white/30 tracking-[0.25em] uppercase mb-2">
+                  Based In
+                </p>
+                <p className="font-mono text-sm text-white/70">Kolkata, IN</p>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -64,7 +64,7 @@ function SocialLink({ label, href }: { label: string; href: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="underline-draw font-ui text-sm uppercase tracking-[0.15em] text-white/60 hover:text-white transition-colors py-1"
+      className="underline-draw font-ui text-sm uppercase tracking-[0.15em] text-white/60 hover:text-white active:text-white transition-colors py-3 px-2 min-h-[44px] flex items-center"
       data-cursor-expand
     >
       {label}
@@ -111,7 +111,7 @@ export default function Contact() {
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full relative z-10">
         {/* Experience cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-20 md:mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16 md:mb-32">
           {experiences.map((exp, i) => (
             <motion.div
               key={i}
@@ -145,7 +145,7 @@ export default function Contact() {
           {headlineLines.map((line, i) => (
             <div key={i} className="overflow-visible md:overflow-hidden h-auto py-3">
               <motion.h2
-                className="text-section-title font-display italic text-white leading-[1.1]"
+                className="font-display italic text-white leading-[1.1]" style={{ fontSize: 'clamp(2.4rem, 11vw, 6rem)' }}
                 initial={{ y: 30, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
@@ -162,13 +162,13 @@ export default function Contact() {
         </div>
 
         {/* Email with wave hover */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 py-4">
           <WaveEmail email="sujayx07@gmail.com" />
         </div>
 
         {/* Social links */}
         <motion.div
-          className="flex items-center justify-center gap-8 md:gap-12 mb-20"
+          className="flex items-center justify-center gap-10 md:gap-12 mb-16 md:mb-20 flex-wrap"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

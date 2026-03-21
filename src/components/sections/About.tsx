@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useMotionValue, useMotionTemplate } from "framer-motion";
 import { useCounter } from "@/lib/utils";
 import SectionTransition from "@/components/ui/SectionTransition";
 import { ShootingStars } from "@/components/ui/shooting-stars";
@@ -38,7 +38,7 @@ function BlurReveal({
   );
 }
 
-// 21st.dev Spotlight Card with Border Glow
+// 21st.dev Spotlight Card with Border Glow (React-Free High Performance Version)
 function SpotlightCard({
   children,
   className = "",
@@ -47,14 +47,15 @@ function SpotlightCard({
   className?: string;
 }) {
   const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
   const [opacity, setOpacity] = useState(0);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!divRef.current) return;
-    const div = divRef.current;
-    const rect = div.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    const { left, top } = divRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - left);
+    mouseY.set(e.clientY - top);
   };
 
   return (
@@ -63,21 +64,21 @@ function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
-      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#060606] p-6 md:p-8 shadow-2xl ${className}`}
+      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#060606] p-6 md:p-8 shadow-2xl transform-gpu ${className}`}
       whileHover={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       initial={{ y: 50, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true, margin: "-50px" }}
     >
-      <div
+      <motion.div
         className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-0"
         style={{
           opacity,
-          background: `radial-gradient(500px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.08), transparent 40%)`,
+          background: useMotionTemplate`radial-gradient(500px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.08), transparent 40%)`,
         }}
       />
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay z-0" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")' }} />
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay z-0 transform-gpu" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")' }} />
       <div className="relative z-10 h-full">{children}</div>
     </motion.div>
   );
@@ -108,7 +109,7 @@ function OrbitTag({
       {/* 🔵 ROTATING PIVOT CONTAINER */}
       <motion.div
         className="absolute top-1/2 left-1/2 flex items-center justify-start pointer-events-none z-10"
-        style={{ width: radius * 2, height: 1, marginLeft: -radius }}
+        style={{ width: radius * 2, height: 1, marginLeft: -radius, willChange: "transform" }}
         initial={{ rotate: startAngle }}
         animate={{ rotate: [startAngle, startAngle + 360] }}
         transition={{ duration, repeat: Infinity, ease: "linear" }}
@@ -116,6 +117,7 @@ function OrbitTag({
         {/* 🟣 THE TAG ITSELF (COUNTER-ROTATING to stay completely level!) */}
         <motion.div
           className="absolute left-0 w-0 h-0 flex items-center justify-center -translate-x-1/2 pointer-events-none"
+          style={{ willChange: "transform" }}
           initial={{ rotate: -startAngle }}
           animate={{ rotate: [-startAngle, -(startAngle + 360)] }}
           transition={{ duration, repeat: Infinity, ease: "linear" }}
@@ -231,7 +233,8 @@ export default function About() {
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
         {/* Section title */}
         <motion.h2
-          className="text-section-title font-display italic mb-12 md:mb-20 bg-gradient-to-b from-white to-white/20 bg-clip-text text-transparent"
+          className="font-display italic mb-10 md:mb-20 bg-gradient-to-b from-white to-white/20 bg-clip-text text-transparent"
+          style={{ fontSize: "clamp(2.8rem, 12vw, 6rem)" }}
           initial={{ x: -60, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true }}
@@ -241,9 +244,9 @@ export default function About() {
         </motion.h2>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[250px] md:auto-rows-[160px] gap-4 md:gap-6 mt-12 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mt-8 md:mt-12 w-full md:auto-rows-[160px]">
           {/* Top Left: Main Bio Card */}
-          <SpotlightCard className="md:col-span-7 md:row-span-2 flex flex-col justify-end w-full h-full p-8 md:p-10">
+          <SpotlightCard className="md:col-span-7 md:row-span-2 flex flex-col justify-end w-full h-full p-8 md:p-10 min-h-[280px] md:min-h-0">
             <h3 className="font-display italic text-4xl md:text-5xl tracking-wide text-white mb-3">
               Sujay Dey
             </h3>
@@ -256,14 +259,14 @@ export default function About() {
           </SpotlightCard>
 
           {/* Top Right: KolkataTimeCard */}
-          <SpotlightCard className="md:col-span-5 md:row-span-2 w-full h-full relative !p-0">
+          <SpotlightCard className="md:col-span-5 md:row-span-2 w-full h-full relative !p-0 min-h-[280px] md:min-h-0">
             <KolkataTimeCard />
           </SpotlightCard>
 
           {/* Bottom Left: Skill Orbit Constellation */}
-          <SpotlightCard className="md:col-span-5 md:row-span-2 w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-0">
+          <SpotlightCard className="md:col-span-5 md:row-span-2 w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-0 min-h-[300px] md:min-h-0">
             <div className="absolute inset-0 w-full h-full flex items-center justify-center scale-[0.60] sm:scale-75 md:scale-[0.80] lg:scale-95">
-              <div className="absolute w-40 h-40 rounded-full bg-[#00ffc3]/5 blur-[60px]" />
+              <div className="absolute w-64 h-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,255,195,0.08)_0%,transparent_70%)] pointer-events-none" />
               
               {/* Calculate exact mathematical delays so they orbit perfectly spaced like spokes on a wheel */}
               {skillTags.map((tag, i) => (
@@ -284,7 +287,7 @@ export default function About() {
           </SpotlightCard>
 
           {/* Bottom Middle: Stats */}
-          <SpotlightCard className="md:col-span-3 md:row-span-2 w-full h-full flex flex-col items-center justify-center gap-6 md:gap-8 p-6">
+          <SpotlightCard className="md:col-span-3 md:row-span-2 w-full h-full flex flex-col items-center justify-center gap-6 md:gap-8 p-6 min-h-[160px] md:min-h-0">
              <div className="w-full flex md:flex-col items-center justify-between md:justify-center gap-4 md:gap-8 mt-auto md:mt-0">
                <CounterCard target={10} label="Hackathons" />
                <div className="w-px h-12 md:w-16 md:h-px bg-gradient-to-b md:bg-gradient-to-r from-transparent via-white/20 to-transparent" />

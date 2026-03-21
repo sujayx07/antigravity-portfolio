@@ -54,13 +54,16 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
   starHeight = 1,
   className,
 }) => {
-  const [star, setStar] = useState<ShootingStar | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  const rectRef = useRef<SVGRectElement>(null);
+  const starRef = useRef<ShootingStar | null>(null);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     const createStar = () => {
       const { x, y, angle } = getRandomStartPoint();
-      const newStar: ShootingStar = {
+      starRef.current = {
         id: Date.now(),
         x,
         y,
@@ -69,71 +72,79 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
         speed: Math.random() * (maxSpeed - minSpeed) + minSpeed,
         distance: 0,
       };
-      setStar(newStar);
+      
+      if (rectRef.current) {
+        rectRef.current.style.display = "block";
+      }
 
       const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
-      setTimeout(createStar, randomDelay);
+      timeoutId = setTimeout(createStar, randomDelay);
     };
 
     createStar();
 
-    return () => {};
+    return () => clearTimeout(timeoutId);
   }, [minSpeed, maxSpeed, minDelay, maxDelay]);
 
   useEffect(() => {
+    let animationFrame: number;
+
     const moveStar = () => {
-      if (star) {
-        setStar((prevStar) => {
-          if (!prevStar) return null;
-          const newX =
-            prevStar.x +
-            prevStar.speed * Math.cos((prevStar.angle * Math.PI) / 180);
-          const newY =
-            prevStar.y +
-            prevStar.speed * Math.sin((prevStar.angle * Math.PI) / 180);
-          const newDistance = prevStar.distance + prevStar.speed;
-          const newScale = 1 + newDistance / 100;
-          if (
-            newX < -20 ||
-            newX > window.innerWidth + 20 ||
-            newY < -20 ||
-            newY > window.innerHeight + 20
-          ) {
-            return null;
-          }
-          return {
+      if (starRef.current && rectRef.current) {
+        const prevStar = starRef.current;
+        const newX =
+          prevStar.x +
+          prevStar.speed * Math.cos((prevStar.angle * Math.PI) / 180);
+        const newY =
+          prevStar.y +
+          prevStar.speed * Math.sin((prevStar.angle * Math.PI) / 180);
+        const newDistance = prevStar.distance + prevStar.speed;
+        const newScale = 1 + newDistance / 100;
+        
+        if (
+          newX < -20 ||
+          newX > window.innerWidth + 20 ||
+          newY < -20 ||
+          newY > window.innerHeight + 20
+        ) {
+          starRef.current = null;
+          rectRef.current.style.display = "none";
+        } else {
+          starRef.current = {
             ...prevStar,
             x: newX,
             y: newY,
             distance: newDistance,
             scale: newScale,
           };
-        });
+          
+          rectRef.current.setAttribute("x", newX.toString());
+          rectRef.current.setAttribute("y", newY.toString());
+          rectRef.current.setAttribute("width", (starWidth * newScale).toString());
+          rectRef.current.setAttribute(
+            "transform",
+            `rotate(${prevStar.angle}, ${newX + (starWidth * newScale) / 2}, ${newY + starHeight / 2})`
+          );
+        }
       }
+      animationFrame = requestAnimationFrame(moveStar);
     };
 
-    const animationFrame = requestAnimationFrame(moveStar);
+    animationFrame = requestAnimationFrame(moveStar);
     return () => cancelAnimationFrame(animationFrame);
-  }, [star]);
+  }, [starWidth, starHeight]);
 
   return (
     <svg
       ref={svgRef}
-      className={cn("w-full h-full absolute inset-0 pointer-events-none", className)}
+      className={cn("w-full h-full absolute inset-0 pointer-events-none transform-gpu", className)}
     >
-      {star && (
-        <rect
-          key={star.id}
-          x={star.x}
-          y={star.y}
-          width={starWidth * star.scale}
-          height={starHeight}
-          fill="url(#gradient)"
-          transform={`rotate(${star.angle}, ${
-            star.x + (starWidth * star.scale) / 2
-          }, ${star.y + starHeight / 2})`}
-        />
-      )}
+      <rect
+        ref={rectRef}
+        height={starHeight}
+        fill="url(#gradient)"
+        style={{ display: "none", willChange: "transform" }}
+      />
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: trailColor, stopOpacity: 0 }} />

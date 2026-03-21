@@ -52,6 +52,7 @@ function AchievementCard({
           mass: 0.8,
         }}
         whileHover={{ scale: 1.02, y: -4 }}
+        whileTap={{ scale: 0.97 }}
       >
         {/* Cool Purplish Hover Gradient Underlay */}
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl bg-gradient-to-br from-violet-600/10 via-fuchsia-600/5 to-transparent pointer-events-none z-0" />

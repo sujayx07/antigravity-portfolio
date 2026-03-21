@@ -208,7 +208,7 @@ export default function Skills() {
         />
       </div>
 
-      {/* 3D Tech Stack Canvas (Interactive overlay) filling the ENTIRE section */}
+      {/* 3D Tech Stack Canvas */}
       <div 
         className="absolute inset-0 z-20 w-full h-full cursor-grab active:cursor-grabbing"
         data-cursor-expand
@@ -246,10 +246,12 @@ export default function Skills() {
         </Canvas>
       </div>
 
+
+
       <div className="relative w-full h-[70vh] min-h-[500px] md:h-screen md:min-h-[700px] flex items-center justify-center pointer-events-none">
         
         {/* Subtle Background Glow */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] md:w-[250px] md:h-[250px] bg-[#d3a1ff]/30 rounded-full blur-[80px] md:blur-[120px]" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] bg-[radial-gradient(circle_at_center,rgba(211,161,255,0.15)_0%,transparent_60%)] rounded-full pointer-events-none" />
 
         {/* Center Title */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] z-0 text-center w-full px-4">

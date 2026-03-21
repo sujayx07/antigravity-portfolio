@@ -66,13 +66,13 @@ export default function Hero() {
     >
       <div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 py-20">
         <motion.div style={{ y: headlineY }} className="max-w-[900px]">
-          <h1 className="text-hero font-display">
+          <h1 className="font-display" style={{ fontSize: "clamp(2.6rem, 9vw, 7rem)", lineHeight: 1.05 }}>
             {lines.map((line, i) => (
               <TextRevealLine key={i} delay={line.delay}>
                 {line.hasScalable ? (
                   <>
                     to crafting{" "}
-                    <span className="italic text-[1.1em]">scalable</span>
+                    <span className="italic" style={{ fontSize: "1.05em" }}>scalable</span>
                   </>
                 ) : (
                   line.text
@@ -85,7 +85,7 @@ export default function Hero() {
         {/* Sub-tagline */}
         <motion.div style={{ y: subY }}>
           <motion.p
-            className="font-mono text-xs md:text-sm tracking-[0.12em] text-gray-400 mt-12 max-w-[650px] leading-relaxed"
+            className="font-mono text-xs md:text-sm tracking-[0.12em] text-gray-400 mt-8 md:mt-12 max-w-[650px] leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.2, duration: 1, ease: [0.19, 1, 0.22, 1] }}
@@ -93,11 +93,29 @@ export default function Hero() {
             Google Gemini Campus Ambassador · SIH&apos;25 Winner · 6× Hackathon
             Champion
           </motion.p>
+          
+          {/* Mobile-only CTA */}
+          <motion.a
+            href="#about"
+            className="md:hidden inline-flex items-center gap-3 mt-8 group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2.5, duration: 0.8 }}
+          >
+            <span className="font-mono text-xs tracking-[0.15em] uppercase text-gray-600 group-active:text-gray-900 transition-colors">See My Work</span>
+            <motion.span
+              className="font-mono text-base text-gray-400"
+              animate={{ y: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              ↓
+            </motion.span>
+          </motion.a>
         </motion.div>
 
         {/* HR line */}
         <motion.div
-          className="mt-16"
+          className="mt-12 md:mt-16"
           style={{ y: hrY, opacity: hrOpacity, x: hrX }}
         >
           <motion.div
@@ -114,9 +132,9 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator - hidden on smaller phones */}
       <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 hidden sm:flex"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.5, duration: 0.8 }}
