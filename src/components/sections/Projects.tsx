@@ -193,7 +193,7 @@ export default function Projects() {
         }
         @media (min-width: 768px) {
           section {
-            height: ${projects.length * 150}vh !important; /* Increased height for more dwell time */
+            height: ${projects.length * 75}vh !important; /* 75vh per project = 50% less total scroll */
           }
         }
       `}</style>

@@ -27,7 +27,7 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://sujayx07.xyz"),
   title: {
-    default: "Sujay Dey | sujayx07-Creative Developer & Full-Stack Engineer",
+    default: "Sujay Dey • Creative Developer & Full-Stack Engineer • sujayx07",
     template: "%s | Sujay Dey"
   },
   description:
