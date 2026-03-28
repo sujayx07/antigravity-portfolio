@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import { useScramble } from "@/lib/utils";
 import { HoverButton } from "@/components/ui/hover-glow-button";
+import { profileLinks } from "@/lib/data";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -74,7 +75,7 @@ function NavLink({ label, href }: { label: string; href: string }) {
   const displayText = useScramble(label, isHovered);
 
   return (
-    <div 
+    <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -94,39 +95,105 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
-  
-  // Track viewport height to trigger animation after Hero section ends
-  const [vh, setVh] = useState(800);
   const [isMobile, setIsMobile] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(900);
+  const [heroEndY, setHeroEndY] = useState(900);
+  const [aboutStartY, setAboutStartY] = useState(1100);
+
+  const AVATAR_START_SIZE = 320;
+  const AVATAR_START_Y = 170;
+  const AVATAR_START_X = -110;
+
+  // Recompute animation anchors on resize/zoom to avoid drift and jitter.
   useEffect(() => {
-    const update = () => {
-      setVh(window.innerHeight);
+    const updateMetrics = () => {
+      const hero = document.getElementById("hero");
+      const about = document.getElementById("about");
+      const nextHeroEnd = hero
+        ? hero.offsetTop + hero.offsetHeight
+        : window.innerHeight;
+      const nextAboutStart = about ? about.offsetTop : nextHeroEnd;
+
+      setViewportHeight(window.innerHeight);
+      setHeroEndY(nextHeroEnd);
+      setAboutStartY(nextAboutStart);
       setIsMobile(window.innerWidth < 768);
     };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+
+    updateMetrics();
+    window.addEventListener("resize", updateMetrics);
+    window.addEventListener("orientationchange", updateMetrics);
+    window.visualViewport?.addEventListener("resize", updateMetrics);
+
+    return () => {
+      window.removeEventListener("resize", updateMetrics);
+      window.removeEventListener("orientationchange", updateMetrics);
+      window.visualViewport?.removeEventListener("resize", updateMetrics);
+    };
   }, []);
 
+  const transitionStartY = Math.max(0, heroEndY - viewportHeight * 0.38);
+  const transitionEndY = Math.max(
+    transitionStartY + 300,
+    aboutStartY + viewportHeight * 0.06,
+  );
+
   // Animation values for the floating profile picture
-  // It stays large [vh] and then shrinks over the next 500px for a smoother transition
-  const imgSize = useTransform(scrollY, [vh, vh + 500], ["400px", "40px"]);
-  const imgY = useTransform(scrollY, [vh, vh + 500], ["30vh", "0vh"]);
-  const imgX = useTransform(scrollY, [vh, vh + 500], ["-10vw", "0vw"]);
-  const imgScale = useTransform(scrollY, [vh, vh + 500], [1, 1]);
-  // Make it a circle only at the end of the animation
-  const imgRadius = useTransform(scrollY, [vh + 300, vh + 500], ["0%", "50%"]);
+  // Start while Hero is fading and finish after About starts for a smooth handoff.
+  const imgSize = useTransform(
+    scrollY,
+    [transitionStartY, transitionEndY],
+    [AVATAR_START_SIZE, 40],
+  );
+  const imgY = useTransform(
+    scrollY,
+    [transitionStartY, transitionEndY],
+    [AVATAR_START_Y, 0],
+  );
+  const imgX = useTransform(
+    scrollY,
+    [transitionStartY, transitionEndY],
+    [AVATAR_START_X, 0],
+  );
+  const imgRadius = useTransform(
+    scrollY,
+    [transitionStartY, transitionEndY],
+    [12, 999],
+  );
+
+  const smoothImgSize = useSpring(imgSize, {
+    stiffness: 300,
+    damping: 32,
+    mass: 0.35,
+  });
+  const smoothImgY = useSpring(imgY, { stiffness: 300, damping: 32, mass: 0.35 });
+  const smoothImgX = useSpring(imgX, { stiffness: 300, damping: 32, mass: 0.35 });
+  const smoothImgRadius = useSpring(imgRadius, {
+    stiffness: 340,
+    damping: 36,
+    mass: 0.35,
+  });
 
   // Connect Me button fade and slide
-  const connectOpacity = useTransform(scrollY, [vh + 200, vh + 500], [0, 1]);
-  const connectX = useTransform(scrollY, [vh + 200, vh + 500], [20, 0]);
+  const connectOpacity = useTransform(
+    scrollY,
+    [transitionStartY + 120, transitionEndY],
+    [0, 1],
+  );
+  const connectX = useTransform(
+    scrollY,
+    [transitionStartY + 120, transitionEndY],
+    [20, 0],
+  );
 
   // Track if we are inside the Projects section
   const [inProjects, setInProjects] = useState(false);
+  const resumeHref = profileLinks.resumeUrl;
+  const resumeFileName = profileLinks.resumeFileName;
 
   useEffect(() => {
     const unsubscribe = scrollY.on("change", (v) => {
-      setScrolled(v > vh / 2);
+      setScrolled(v > transitionStartY + 120);
     });
 
     // Observer to detect #projects section accurately across layouts
@@ -140,7 +207,7 @@ export default function Navbar() {
           }
         });
       },
-      { rootMargin: "0px 0px -90% 0px" } 
+      { rootMargin: "0px 0px -90% 0px" },
     );
 
     const interval = setInterval(() => {
@@ -156,7 +223,7 @@ export default function Navbar() {
       observer.disconnect();
       clearInterval(interval);
     };
-  }, [scrollY, vh]);
+  }, [scrollY, transitionStartY]);
 
   return (
     <>
@@ -172,7 +239,7 @@ export default function Navbar() {
           href="#"
           className="relative flex items-center gap-2 md:gap-3"
           data-cursor-hide
-          animate={{ y: (!isMobile && inProjects) ? -32 : 0 }}
+          animate={{ y: !isMobile && inProjects ? -32 : 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <img
@@ -194,7 +261,30 @@ export default function Navbar() {
 
         {/* CTA Button & Profile Image */}
         <div className="flex items-center gap-2 mt-1 md:mt-0">
-          <motion.div 
+          <motion.div
+            className="hidden md:block"
+            style={{ opacity: connectOpacity, x: connectX }}
+          >
+            <a
+              href={resumeHref}
+              download={resumeFileName}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor-hide
+            >
+              <HoverButton
+                glowColor="#9dd7ff"
+                backgroundColor="#0a0a0a"
+                textColor="#ffffff"
+                hoverTextColor="#9dd7ff"
+                className="py-2.5 px-5 rounded-full text-xs uppercase tracking-[0.15em] font-ui"
+              >
+                Resume ↓
+              </HoverButton>
+            </a>
+          </motion.div>
+
+          <motion.div
             className="hidden md:block"
             style={{ opacity: connectOpacity, x: connectX }}
           >
@@ -233,7 +323,9 @@ export default function Navbar() {
             />
             <motion.span
               className="block w-full h-px bg-white origin-center"
-              animate={isMenuOpen ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }}
+              animate={
+                isMenuOpen ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }
+              }
               transition={{ duration: 0.3 }}
             />
           </button>
@@ -245,22 +337,21 @@ export default function Navbar() {
         <div className="relative w-10 h-10 flex items-center justify-center pointer-events-none">
           <motion.div
             style={{
-              width: imgSize,
-              height: imgSize,
-              y: imgY,
-              x: imgX,
-              scale: imgScale,
-              borderRadius: imgRadius,
+              width: smoothImgSize,
+              height: smoothImgSize,
+              y: smoothImgY,
+              x: smoothImgX,
+              borderRadius: smoothImgRadius,
               overflow: "hidden",
             }}
             className="absolute right-0 top-0 origin-top-right transform-gpu pointer-events-auto"
           >
             <motion.div
               animate={{ y: scrolled ? 0 : [0, -15, 0] }}
-              transition={{ 
-                duration: 4, 
-                repeat: scrolled ? 0 : Infinity, 
-                ease: "easeInOut" 
+              transition={{
+                duration: 4,
+                repeat: scrolled ? 0 : Infinity,
+                ease: "easeInOut",
               }}
               className="w-full h-full"
             >
@@ -286,21 +377,34 @@ export default function Navbar() {
             transition={{ duration: 0.7, ease: [0.77, 0, 0.175, 1] }}
           >
             {/* Noise texture overlay */}
-            <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")' }} />
-            
+            <div
+              className="absolute inset-0 opacity-[0.04] pointer-events-none"
+              style={{
+                backgroundImage:
+                  'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")',
+              }}
+            />
+
             {/* Ambient gradient orb */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.04)_0%,transparent_70%)] pointer-events-none" />
 
             {/* Nav Links */}
             <div className="flex-1 flex flex-col justify-center px-8 pt-28 gap-2">
               {navLinks.map((link, i) => (
-                <div key={link.label} className="overflow-hidden border-b border-white/[0.06] last:border-0">
+                <div
+                  key={link.label}
+                  className="overflow-hidden border-b border-white/[0.06] last:border-0"
+                >
                   <motion.a
                     href={link.href}
                     className="flex items-baseline justify-between py-5 group"
                     initial={{ y: "120%", opacity: 0 }}
                     animate={{ y: "0%", opacity: 1 }}
-                    transition={{ delay: 0.25 + i * 0.07, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{
+                      delay: 0.25 + i * 0.07,
+                      duration: 0.6,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <span className="font-display text-[11vw] sm:text-7xl italic font-light tracking-tight text-white group-active:text-white/60 transition-colors">
@@ -315,7 +419,7 @@ export default function Navbar() {
             </div>
 
             {/* Bottom Strip */}
-            <motion.div 
+            <motion.div
               className="px-8 pb-12 pt-6 border-t border-white/[0.06] flex items-end justify-between"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -331,6 +435,16 @@ export default function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   sujayx07@gmail.com
+                </a>
+                <a
+                  href={resumeHref}
+                  download={resumeFileName}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-block font-mono text-[11px] tracking-[0.18em] uppercase text-white/80 hover:text-white transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Download Resume
                 </a>
               </div>
               <div className="text-right">

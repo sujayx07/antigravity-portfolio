@@ -258,6 +258,14 @@ export const skillIcons = [
   "NLP/AI",
 ];
 
+export const profileLinks = {
+  // Keep this URL stable (e.g. cloud file link) and replace file contents remotely.
+  resumeUrl:
+    process.env.NEXT_PUBLIC_RESUME_URL ||
+    "https://drive.google.com/file/d/1p2Kh6E2puutM6QTOmJQ1ehs-vuJMO4M5/view?usp=drive_link",
+  resumeFileName: "Sujay_Dey_Resume.pdf",
+};
+
 export const marqueeText =
   "REACT · NEXT.JS · NODE.JS · TYPESCRIPT · PYTHON · MONGODB · POSTGRESQL · PRISMA · SOCKET.IO · REDIS · ETHEREUM · WEB3 · MACHINE LEARNING · NLP · TAILWIND · GIT · AUTH0 · SUPABASE · FIREBASE · REST APIs · CHROME EXTENSIONS · SMART CONTRACTS · ";
 
