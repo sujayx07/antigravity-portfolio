@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView, useMotionValue, useMotionTemplate } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useMotionTemplate,
+} from "framer-motion";
 import { useCounter } from "@/lib/utils";
 import SectionTransition from "@/components/ui/SectionTransition";
 import { ShootingStars } from "@/components/ui/shooting-stars";
@@ -78,7 +83,13 @@ function SpotlightCard({
           background: useMotionTemplate`radial-gradient(500px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.08), transparent 40%)`,
         }}
       />
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay z-0 transform-gpu" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")' }} />
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay z-0 transform-gpu"
+        style={{
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")',
+        }}
+      />
       <div className="relative z-10 h-full">{children}</div>
     </motion.div>
   );
@@ -101,15 +112,20 @@ function OrbitTag({
   return (
     <>
       {/* 🟢 VISIBLE SECRETE ORBIT RING */}
-      <div 
+      <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.04] pointer-events-none"
         style={{ width: radius * 2, height: radius * 2 }}
       />
-      
+
       {/* 🔵 ROTATING PIVOT CONTAINER */}
       <motion.div
         className="absolute top-1/2 left-1/2 flex items-center justify-start pointer-events-none z-10"
-        style={{ width: radius * 2, height: 1, marginLeft: -radius, willChange: "transform" }}
+        style={{
+          width: radius * 2,
+          height: 1,
+          marginLeft: -radius,
+          willChange: "transform",
+        }}
         initial={{ rotate: startAngle }}
         animate={{ rotate: [startAngle, startAngle + 360] }}
         transition={{ duration, repeat: Infinity, ease: "linear" }}
@@ -136,19 +152,19 @@ function OrbitTag({
 function WireframeGlobe() {
   return (
     <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full border border-white/20 flex items-center justify-center overflow-hidden bg-black/50">
-      <motion.div 
+      <motion.div
         className="absolute w-[200%] h-full border border-white/20 rounded-[50%]"
         animate={{ rotateY: [0, 360] }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
       />
-      <motion.div 
+      <motion.div
         className="absolute w-[200%] h-full border border-white/20 rounded-[50%]"
         animate={{ rotateY: [60, 420] }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
       />
       <div className="absolute w-full h-[30%] border-y border-white/20 rounded-[50%]" />
     </div>
-  )
+  );
 }
 
 // Counter card
@@ -204,12 +220,12 @@ export default function About() {
       {/* Background with shooting stars and a teal radial gradient */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,255,195,0.06)_0%,rgba(0,0,0,0)_70%)]" />
-        <div 
-          className="absolute inset-0 opacity-40 mix-blend-screen" 
+        <div
+          className="absolute inset-0 opacity-40 mix-blend-screen"
           style={{
             backgroundImage: `radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.5), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, rgba(0,255,195,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.6), rgba(0,0,0,0))`,
             backgroundRepeat: "repeat",
-            backgroundSize: "200px 200px"
+            backgroundSize: "200px 200px",
           }}
         />
         <ShootingStars
@@ -254,7 +270,7 @@ export default function About() {
               Creative Frontend Developer &middot; Full-Stack Engineer
             </p>
             <div className="font-sans font-light text-lg md:text-xl text-white/80 leading-relaxed max-w-2xl">
-              <BlurReveal text="B.Tech CSE (IoT) student at Techno Main Salt Lake. Full-Stack Developer obsessed with building experiences that feel alive. Google Gemini Campus Ambassador. 6x Hackathon winner. Open source contributor. I write code that ships." />
+              <BlurReveal text="B.Tech CSE (IoT) student at Techno Main Salt Lake. Full-Stack Developer obsessed with building experiences that feel alive. Google Campus Expert. 7x Hackathon winner. Open source contributor. I write code that ships." />
             </div>
           </SpotlightCard>
 
@@ -267,14 +283,14 @@ export default function About() {
           <SpotlightCard className="md:col-span-5 md:row-span-2 w-full h-full flex flex-col items-center justify-center relative overflow-hidden p-0 min-h-[300px] md:min-h-0">
             <div className="absolute inset-0 w-full h-full flex items-center justify-center scale-[0.60] sm:scale-75 md:scale-[0.80] lg:scale-95">
               <div className="absolute w-64 h-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,255,195,0.08)_0%,transparent_70%)] pointer-events-none" />
-              
+
               {/* Calculate exact mathematical delays so they orbit perfectly spaced like spokes on a wheel */}
               {skillTags.map((tag, i) => (
                 <OrbitTag
                   key={tag}
                   label={tag}
-                  delay={i * (24 / skillTags.length)}  // e.g., 0, 4.8, 9.6...
-                  duration={24}  // 24 seconds for one full slow loop
+                  delay={i * (24 / skillTags.length)} // e.g., 0, 4.8, 9.6...
+                  duration={24} // 24 seconds for one full slow loop
                   radius={100 + i * 36} // 100, 136, 172, 208, 244
                 />
               ))}
@@ -288,11 +304,11 @@ export default function About() {
 
           {/* Bottom Middle: Stats */}
           <SpotlightCard className="md:col-span-3 md:row-span-2 w-full h-full flex flex-col items-center justify-center gap-6 md:gap-8 p-6 min-h-[160px] md:min-h-0">
-             <div className="w-full flex md:flex-col items-center justify-between md:justify-center gap-4 md:gap-8 mt-auto md:mt-0">
-               <CounterCard target={10} label="Hackathons" />
-               <div className="w-px h-12 md:w-16 md:h-px bg-gradient-to-b md:bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-               <CounterCard target={6} label="First Places" />
-             </div>
+            <div className="w-full flex md:flex-col items-center justify-between md:justify-center gap-4 md:gap-8 mt-auto md:mt-0">
+              <CounterCard target={10} label="Hackathons" />
+              <div className="w-px h-12 md:w-16 md:h-px bg-gradient-to-b md:bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              <CounterCard target={6} label="First Places" />
+            </div>
           </SpotlightCard>
 
           {/* Bottom Right: Roles & Currently building */}
@@ -304,11 +320,16 @@ export default function About() {
               </p>
               <div className="flex flex-col gap-3">
                 {[
-                  "Google Gemini Campus Ambassador",
-                  "Tech Co-Lead @ Samarth",
+                  "Google Campus Expert",
+                  "Technical Co-Lead @Samarth",
                 ].map((role) => (
-                  <div key={role} className="flex items-center gap-3 group cursor-default">
-                    <span className="text-white/20 group-hover:text-[#00ffc3] transition-colors duration-300 font-mono text-sm">▹</span>
+                  <div
+                    key={role}
+                    className="flex items-center gap-3 group cursor-default"
+                  >
+                    <span className="text-white/20 group-hover:text-[#00ffc3] transition-colors duration-300 font-mono text-sm">
+                      ▹
+                    </span>
                     <span className="font-sans font-light text-[14px] md:text-[15px] tracking-wide text-white/70 group-hover:text-white transition-colors duration-300">
                       {role}
                     </span>
@@ -316,7 +337,7 @@ export default function About() {
                 ))}
               </div>
             </div>
-            
+
             <div className="w-full mt-auto pt-6 md:pt-8">
               <p className="font-mono text-[11px] md:text-xs text-white/40 tracking-[0.25em] uppercase font-bold mb-4 flex items-center gap-3">
                 <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-sm bg-[#00ffc3]/40" />
@@ -339,7 +360,20 @@ export default function About() {
                     </div>
                     {/* Minimalist reveal arrow */}
                     <div className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out">
-                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-[#00ffc3]/80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        className="text-[#00ffc3]/80"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12h14"></path>
+                        <path d="m12 5 7 7-7 7"></path>
+                      </svg>
                     </div>
                   </div>
                 ))}

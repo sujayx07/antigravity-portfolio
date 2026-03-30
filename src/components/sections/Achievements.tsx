@@ -1,7 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, useMotionValue, useSpring, useVelocity } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+  useVelocity,
+} from "framer-motion";
 import { achievements } from "@/lib/data";
 import SectionTransition from "@/components/ui/SectionTransition";
 
@@ -11,7 +18,7 @@ function AchievementCard({
   index,
   setHoveredImage,
 }: {
-  achievement: typeof achievements[0];
+  achievement: (typeof achievements)[0];
   index: number;
   setHoveredImage: (img: string | null) => void;
 }) {
@@ -28,7 +35,7 @@ function AchievementCard({
           setHoveredImage(null);
         }
       },
-      { threshold: 0 }
+      { threshold: 0 },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -93,7 +100,9 @@ function AchievementCard({
           </p>
 
           {/* Org */}
-          <p className="font-mono text-xs text-violet-600/80 mb-3 font-semibold">{achievement.org}</p>
+          <p className="font-mono text-xs text-violet-600/80 mb-3 font-semibold">
+            {achievement.org}
+          </p>
 
           {/* Detail */}
           <p className="font-mono text-xs text-black/50 leading-relaxed max-w-[90%]">
@@ -126,8 +135,13 @@ export default function Achievements() {
 
   // Velocity-based rotation!
   const mouseVelocity = useVelocity(mouseX);
-  const smoothVelocity = useSpring(mouseVelocity, { damping: 50, stiffness: 400 });
-  const tiltAngle = useTransform(smoothVelocity, [-2000, 2000], [-15, 15], { clamp: true });
+  const smoothVelocity = useSpring(mouseVelocity, {
+    damping: 50,
+    stiffness: 400,
+  });
+  const tiltAngle = useTransform(smoothVelocity, [-2000, 2000], [-15, 15], {
+    clamp: true,
+  });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -147,7 +161,11 @@ export default function Achievements() {
     >
       {/* Floating Image Portal */}
       <motion.img
-        src={hoveredImage || "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"}
+        src={
+          hoveredImage ||
+          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        }
+        alt="Achievement certificate preview"
         className="fixed top-0 left-0 pointer-events-none z-[100] w-auto h-auto max-w-[280px] md:max-w-[350px] max-h-[350px] rounded-xl object-contain shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-white/50 bg-black/80 p-1 mix-blend-normal"
         style={{
           x: smoothX,
@@ -156,17 +174,30 @@ export default function Achievements() {
           scale: hoveredImage ? 1 : 0.8,
           rotate: tiltAngle, // Tied to physics velocity!
         }}
-        transition={{ 
-          opacity: { duration: 0.2 }, 
-          scale: { duration: 0.3, type: "spring" } 
+        transition={{
+          opacity: { duration: 0.2 },
+          scale: { duration: 0.3, type: "spring" },
         }}
       />
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 relative z-10">
-
         {/* Hidden Preload Image Cache - Pre-loads all certificates into VRAM to stop jittering on hover */}
-        <div className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden" aria-hidden="true">
-          {achievements.map((ach) => ach.image && <img key={`preload-${ach.title}`} src={ach.image} alt="" decoding="async" loading="eager" />)}
+        <div
+          className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden"
+          aria-hidden="true"
+        >
+          {achievements.map(
+            (ach) =>
+              ach.image && (
+                <img
+                  key={`preload-${ach.title}`}
+                  src={ach.image}
+                  alt=""
+                  decoding="async"
+                  loading="eager"
+                />
+              ),
+          )}
         </div>
         {/* Section heading */}
         <motion.h2
@@ -214,10 +245,10 @@ export default function Achievements() {
                   />
                 </div>
 
-                <AchievementCard 
-                  achievement={achievement} 
-                  index={i} 
-                  setHoveredImage={setHoveredImage} 
+                <AchievementCard
+                  achievement={achievement}
+                  index={i}
+                  setHoveredImage={setHoveredImage}
                 />
               </div>
             ))}

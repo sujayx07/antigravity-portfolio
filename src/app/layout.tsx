@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Cormorant_Garamond, Syne, DM_Mono } from "next/font/google";
 import "./globals.css";
+import {
+  personalProfile,
+  profileLinks,
+  projects,
+  skillCategories,
+} from "@/lib/data";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -26,32 +33,57 @@ const dmMono = DM_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sujayx07.xyz"),
+  applicationName: "Sujay Dey Portfolio",
   title: {
-    default: "Sujay Dey • Creative Developer & Full-Stack Engineer • sujayx07",
-    template: "%s | Sujay Dey"
+    default: "Sujay Dey | Full-Stack Developer Portfolio | sujayx07",
+    template: "%s | Sujay Dey",
   },
   description:
-    "Portfolio of Sujay Dey (sujayx07) — Creative Frontend Developer, Full-Stack Engineer, 6× Hackathon Champion, SIH 2025 National Champion, and Google Gemini Campus Ambassador. Building scalable full-stack web applications and seamless UX/UI designs.",
+    "Portfolio of Sujay Dey (sujayx07), a Creative Frontend Developer and Full-Stack Engineer from Kolkata. SIH 2025 National Winner, Google Gemini Campus Ambassador, and multiple hackathon champion building scalable AI-powered web products.",
   keywords: [
     "Sujay Dey",
     "sujayx07",
     "Sujay Dey portfolio",
-    "Creative Developer",
-    "Full-Stack Engineer",
+    "Full-Stack Developer",
+    "Creative Frontend Developer",
+    "Software Developer Portfolio",
     "Frontend Developer",
-    "Software Engineer India",
+    "Software Engineer Kolkata",
+    "AI Developer India",
     "Hackathon Champion",
     "SIH 2025 Winner",
     "Google Gemini Campus Ambassador",
+    "Campus Expert, Google",
+     "Open Source Contributor",
+     "Web Developer Portfolio",
+     "React Developer Portfolio",
+     "Next.js Developer Portfolio",
     "React Developer",
-    "Next.js Expert"
+    "Next.js Developer",
+    "TypeScript Developer",
   ],
-  authors: [{ name: "Sujay Dey (sujayx07)", url: "https://linkedin.com/in/sujayx07" }],
-  creator: "Sujay Dey",
-  publisher: "Sujay Dey",
+  authors: [{ name: "Sujay Dey (sujayx07)", url: personalProfile.linkedin }],
+  creator: personalProfile.name,
+  publisher: personalProfile.name,
+  category: "technology",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: personalProfile.website,
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
@@ -61,14 +93,14 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Sujay Dey (sujayx07) — Full-Stack Engineer",
+    title: "Sujay Dey (sujayx07) | Full-Stack Developer Portfolio",
     description:
-      "A Creative Developer Dedicated to Crafting Scalable Full Stack Applications & Award-Winning Digital Experiences.",
-    url: "https://sujayx07.xyz",
+      "Explore projects, achievements, and engineering work by Sujay Dey: SIH 2025 National Winner, Gemini Campus Ambassador, and full-stack developer.",
+    url: personalProfile.website,
     siteName: "Sujay Dey Portfolio",
     images: [
       {
-        url: "/og-image.jpeg", 
+        url: "/og-image.jpeg",
         width: 1200,
         height: 630,
         alt: "Sujay Dey (sujayx07) - Creative Developer & Full-Stack Engineer",
@@ -79,13 +111,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sujay Dey (sujayx07) — Creative Developer",
-    description: "Creative Frontend Developer & Full-Stack Engineer. 6× Hackathon Champion.",
+    title: "Sujay Dey (sujayx07) | Full-Stack Developer",
+    description:
+      "Creative Frontend Developer and Full-Stack Engineer building AI-powered web products.",
     images: ["/og-image.jpeg"],
-    creator: "@sujayx07", // Update this to actual twitter handle if known, or user can replace
-  },
-  alternates: {
-    canonical: "https://sujayx07.xyz",
+    creator: "@sujayx07",
   },
 };
 
@@ -94,13 +124,94 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const knowsAbout = [
+    ...skillCategories.languages,
+    ...skillCategories.frameworks,
+    ...skillCategories.technologies,
+    ...skillCategories.core,
+  ];
+
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: personalProfile.name,
+    url: personalProfile.website,
+    email: personalProfile.email,
+    telephone: personalProfile.phone,
+    jobTitle: personalProfile.headline,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Kolkata",
+      addressRegion: "West Bengal",
+      addressCountry: "IN",
+    },
+    sameAs: [
+      personalProfile.linkedin,
+      personalProfile.github,
+      personalProfile.x,
+      profileLinks.resumeUrl,
+    ],
+    knowsAbout,
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Sujay Dey Portfolio",
+    url: personalProfile.website,
+    inLanguage: "en-IN",
+    publisher: {
+      "@type": "Person",
+      name: personalProfile.name,
+    },
+  };
+
+  const projectSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Featured Projects by Sujay Dey",
+    itemListElement: projects.map((project, index) => ({
+      "@type": "CreativeWork",
+      position: index + 1,
+      name: project.title,
+      description: project.description,
+      url: project.link,
+      datePublished: `${project.year}-01-01`,
+      keywords: project.techStack.join(", "),
+      creator: personalProfile.name,
+    })),
+  };
+
   return (
     <html
-      lang="en"
+      lang="en-IN"
       className={`${cormorant.variable} ${syne.variable} ${dmMono.variable}`}
       suppressHydrationWarning
     >
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <Script
+          id="person-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personSchema).replace(/</g, "\\u003c"),
+          }}
+        />
+        <Script
+          id="website-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema).replace(/</g, "\\u003c"),
+          }}
+        />
+        <Script
+          id="projects-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(projectSchema).replace(/</g, "\\u003c"),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

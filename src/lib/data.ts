@@ -27,13 +27,39 @@ export interface Experience {
   detail: string;
 }
 
+export interface PersonalProfile {
+  name: string;
+  username: string;
+  headline: string;
+  location: string;
+  email: string;
+  phone: string;
+  website: string;
+  linkedin: string;
+  github: string;
+  x: string;
+}
+
+export const personalProfile: PersonalProfile = {
+  name: "Sujay Dey",
+  username: "sujayx07",
+  headline: "Creative Frontend Developer and Full-Stack Engineer",
+  location: "Kolkata, West Bengal, India",
+  email: "sujayx07@gmail.com",
+  phone: "+91-62941-76591",
+  website: "https://sujayx07.xyz",
+  linkedin: "https://linkedin.com/in/sujayx07",
+  github: "https://github.com/sujayx07",
+  x: "https://x.com/sujayx07",
+};
+
 export const projects: Project[] = [
   {
     id: 1,
     number: "01",
     title: "Krishi Drishti",
     description:
-      "Scalable AI & IoT platform for crop residue management. Integrates machine learning and real-time data pipelines to track agricultural machinery, boosting operational efficiency by 70%. Led a team of 6 to architect predictive analytics and live monitoring dashboards.",
+      "Scalable AI and IoT platform for crop residue management. Integrates machine learning and real-time data pipelines to track agricultural machinery, boosting operational efficiency by 70%. Led a team of 6 to architect predictive analytics and live monitoring dashboards.",
     techStack: ["Machine Learning", "IoT", "Data Pipelines", "React", "Python"],
     role: "Team Lead & System Architect",
     achievement: "National Winner – Smart India Hackathon 2025",
@@ -82,7 +108,7 @@ export const projects: Project[] = [
     title: "TruthScope",
     description:
       "Real-time AI-powered fake news detection browser extension. Achieves 98.6% accuracy in credibility scoring using Google Gemini and NLP pipelines.",
-    techStack: ["Gemma Agent", "NLP", "Chrome Extension", "JavaScript", "Python"],
+    techStack: ["Google Gemini", "NLP", "Chrome Extension", "JavaScript", "Python"],
     role: "Team Lead & Developer",
     achievement: "4th Place · Smart Bengal Hackathon 2025 · RCCIIT Grand Finals",
     year: "2025",
@@ -215,22 +241,22 @@ export const achievements: Achievement[] = [
 
 export const experiences: Experience[] = [
   {
-    title: "Google Gemini Campus Ambassador",
+    title: "Google Campus Expert",
     period: "Aug 2025 – Present",
-    org: "Google Developers Community",
-    detail: "Organized workshops for 500+ students · AI literacy initiatives",
+    org: "Google",
+    detail: "Led AI literacy workshops for 900+ students across campus communities.",
   },
   {
     title: "Tech Co-Lead & Full Stack Developer",
     period: "Jan 2024 – Present",
     org: "Samarth Educational Society, TMSL",
-    detail: "+30% traffic · Led Pravidhi, Photography & Graphics teams",
+    detail: "Drove 30% growth in community traffic and led Pravidhi, Photography, and Graphics teams.",
   },
   {
     title: "Project Admin & Open Source Maintainer",
     period: "May 2024 – Aug 2024",
     org: "Hacktoberfest 2024 (MLH Event)",
-    detail: "250+ participants · 45% repo quality improvement",
+    detail: "Managed 250+ participants and improved repository quality by 45%.",
   },
 ];
 

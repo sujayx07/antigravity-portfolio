@@ -23,6 +23,7 @@ function WaveEmail({ email }: { email: string }) {
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCopy}
       data-cursor-label={copied ? "✓" : "COPY"}
+      aria-label={`Copy ${email} to clipboard`}
     >
       {email.split("").map((char, i) => (
         <motion.span
@@ -74,6 +75,7 @@ function SocialLink({ label, href }: { label: string; href: string }) {
 
 export default function Contact() {
   const headlineLines = ["Let's build", "something", "remarkable."];
+  const currentYear = new Date().getFullYear();
 
   return (
     <section
@@ -83,12 +85,12 @@ export default function Contact() {
       {/* Background with shooting stars and a teal radial gradient */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,255,195,0.06)_0%,rgba(0,0,0,0)_70%)]" />
-        <div 
-          className="absolute inset-0 opacity-40 mix-blend-screen" 
+        <div
+          className="absolute inset-0 opacity-40 mix-blend-screen"
           style={{
             backgroundImage: `radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.5), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, rgba(0,255,195,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.6), rgba(0,0,0,0))`,
             backgroundRepeat: "repeat",
-            backgroundSize: "200px 200px"
+            backgroundSize: "200px 200px",
           }}
         />
         <ShootingStars
@@ -143,9 +145,13 @@ export default function Contact() {
         {/* Contact headline — cinematic reveal (white on black) */}
         <div className="text-center mb-16 md:mb-24 px-4 h-auto min-h-[30vh] flex flex-col justify-center">
           {headlineLines.map((line, i) => (
-            <div key={i} className="overflow-visible md:overflow-hidden h-auto py-3">
+            <div
+              key={i}
+              className="overflow-visible md:overflow-hidden h-auto py-3"
+            >
               <motion.h2
-                className="font-display italic text-white leading-[1.1]" style={{ fontSize: 'clamp(2.4rem, 11vw, 6rem)' }}
+                className="font-display italic text-white leading-[1.1]"
+                style={{ fontSize: "clamp(2.4rem, 11vw, 6rem)" }}
                 initial={{ y: 30, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
@@ -191,7 +197,7 @@ export default function Contact() {
           transition={{ delay: 0.6, duration: 0.8 }}
         >
           <p className="font-mono text-[11px] text-white/30 tracking-wider">
-            © 2025 sujayx07 · Built with obsession.
+            © {currentYear} sujayx07 · Built with obsession.
           </p>
         </motion.div>
       </div>

@@ -90,7 +90,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.2, duration: 1, ease: [0.19, 1, 0.22, 1] }}
           >
-            Google Gemini Campus Ambassador · SIH&apos;25 Winner · 6× Hackathon
+            Google Campus Expert · SIH&apos;25 Winner · 7× Hackathon
             Champion
           </motion.p>
           

@@ -239,12 +239,13 @@ export default function Navbar() {
           href="#"
           className="relative flex items-center gap-2 md:gap-3"
           data-cursor-hide
+          aria-label="Go to homepage"
           animate={{ y: !isMobile && inProjects ? -32 : 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <img
             src="/logo/white-sx07.png"
-            alt="Logo"
+            alt="Sujayx07 logo"
             className="h-10 md:h-12 w-auto object-contain"
           />
           <span className="font-display font-medium text-white text-2xl md:text-3xl tracking-tighter">
