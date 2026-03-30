@@ -166,8 +166,16 @@ export default function Navbar() {
     damping: 32,
     mass: 0.35,
   });
-  const smoothImgY = useSpring(imgY, { stiffness: 300, damping: 32, mass: 0.35 });
-  const smoothImgX = useSpring(imgX, { stiffness: 300, damping: 32, mass: 0.35 });
+  const smoothImgY = useSpring(imgY, {
+    stiffness: 300,
+    damping: 32,
+    mass: 0.35,
+  });
+  const smoothImgX = useSpring(imgX, {
+    stiffness: 300,
+    damping: 32,
+    mass: 0.35,
+  });
   const smoothImgRadius = useSpring(imgRadius, {
     stiffness: 340,
     damping: 36,
@@ -190,6 +198,14 @@ export default function Navbar() {
   const [inProjects, setInProjects] = useState(false);
   const resumeHref = profileLinks.resumeUrl;
   const resumeFileName = profileLinks.resumeFileName;
+
+  const getResumeMobileHref = (url: string) => {
+    const driveMatch = url.match(/\/file\/d\/([^/]+)/);
+    if (!driveMatch) return url;
+    return `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+  };
+
+  const resumeMobileHref = getResumeMobileHref(resumeHref);
 
   useEffect(() => {
     const unsubscribe = scrollY.on("change", (v) => {
@@ -228,7 +244,7 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        className="fixed top-0 left-0 w-full z-[100] px-6 md:px-10 py-6 md:py-8 flex items-center justify-between"
+        className="fixed top-0 left-0 w-full z-[100] px-4 sm:px-6 md:px-10 py-5 md:py-8 flex items-center justify-between"
         style={{ mixBlendMode: "difference" }}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -246,9 +262,9 @@ export default function Navbar() {
           <img
             src="/logo/white-sx07.png"
             alt="Sujayx07 logo"
-            className="h-10 md:h-12 w-auto object-contain"
+            className="h-9 sm:h-10 md:h-12 w-auto object-contain"
           />
-          <span className="font-display font-medium text-white text-2xl md:text-3xl tracking-tighter">
+          <span className="font-display font-medium text-white text-xl sm:text-2xl md:text-3xl tracking-tighter">
             sujayx07
           </span>
         </motion.a>
@@ -412,7 +428,7 @@ export default function Navbar() {
                       {link.label}
                     </span>
                     <span className="font-mono text-[10px] text-white/30 tracking-widest ml-4 group-active:text-white/60 transition-colors">
-                      0{i + 1}
+                      {String(i + 1).padStart(2, "0")}
                     </span>
                   </motion.a>
                 </div>
@@ -421,7 +437,7 @@ export default function Navbar() {
 
             {/* Bottom Strip */}
             <motion.div
-              className="px-8 pb-12 pt-6 border-t border-white/[0.06] flex items-end justify-between"
+              className="px-8 pb-10 pt-6 border-t border-white/[0.06] flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.5 }}
@@ -438,11 +454,17 @@ export default function Navbar() {
                   sujayx07@gmail.com
                 </a>
                 <a
-                  href={resumeHref}
-                  download={resumeFileName}
+                  href="tel:+916294176591"
+                  className="mt-2 block font-mono text-sm text-white/70 hover:text-white transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  +91 62941 76591
+                </a>
+                <a
+                  href={resumeMobileHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-block font-mono text-[11px] tracking-[0.18em] uppercase text-white/80 hover:text-white transition-colors"
+                  className="mt-4 inline-flex min-h-[44px] items-center font-mono text-[11px] tracking-[0.18em] uppercase text-white/80 hover:text-white transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Download Resume
@@ -453,6 +475,9 @@ export default function Navbar() {
                   Based In
                 </p>
                 <p className="font-mono text-sm text-white/70">Kolkata, IN</p>
+                <p className="font-mono text-[10px] text-white/45 mt-2">
+                  Resume: {resumeFileName}
+                </p>
               </div>
             </motion.div>
           </motion.div>

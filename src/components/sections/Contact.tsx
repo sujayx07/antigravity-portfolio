@@ -18,7 +18,7 @@ function WaveEmail({ email }: { email: string }) {
 
   return (
     <motion.button
-      className="font-mono text-lg md:text-2xl tracking-wider text-white/80 hover:text-white transition-colors"
+      className="font-mono text-base sm:text-lg md:text-2xl tracking-[0.08em] sm:tracking-wider text-white/80 hover:text-white transition-colors break-all"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCopy}

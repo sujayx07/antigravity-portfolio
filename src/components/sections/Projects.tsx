@@ -57,15 +57,110 @@ function TiltCard({
   );
 }
 
-function ProjectPanel({ project, direction }: { project: typeof projects[0]; direction: number }) {
+function ProjectPanel({
+  project,
+  direction,
+}: {
+  project: (typeof projects)[0];
+  direction: number;
+}) {
+  const isMobile = direction === 0;
+
+  if (isMobile) {
+    return (
+      <div className="relative h-full flex flex-col justify-center">
+        {project.link && (
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute inset-0 z-50 rounded-xl"
+            aria-label={`Visit project ${project.title}`}
+          />
+        )}
+
+        <motion.span
+          className="absolute top-0 right-0 font-display text-[22vw] font-light text-black/[0.05] leading-none select-none pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {project.number}
+        </motion.span>
+
+        <motion.h3
+          className="font-display text-[12vw] font-light leading-[1.05] mb-5 pr-4"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          key={project.id + "-title-mobile"}
+        >
+          {project.title}
+        </motion.h3>
+
+        <motion.p
+          className="font-mono text-sm leading-relaxed text-black/60 mb-7"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.35 }}
+          key={project.id + "-desc-mobile"}
+        >
+          {project.description}
+        </motion.p>
+
+        <motion.div
+          className="flex flex-wrap gap-2 mb-6"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.35 }}
+          key={project.id + "-tech-mobile"}
+        >
+          {project.techStack.map((tech) => (
+            <span
+              key={tech}
+              className="font-mono text-[11px] px-2.5 py-1.5 border border-black/20 rounded-full"
+            >
+              {tech}
+            </span>
+          ))}
+        </motion.div>
+
+        <motion.span
+          className="font-ui text-[11px] uppercase tracking-[0.15em] text-black/50 mb-3 block"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35, duration: 0.25 }}
+          key={project.id + "-role-mobile"}
+        >
+          {project.role}
+        </motion.span>
+
+        {project.achievement && (
+          <motion.div
+            className="flex items-center gap-2"
+            initial={{ x: 14, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            key={project.id + "-achievement-mobile"}
+          >
+            <span className="text-base">🏆</span>
+            <span className="font-mono text-[11px] text-black/60 leading-relaxed">
+              {project.achievement}
+            </span>
+          </motion.div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <TiltCard className="relative h-full flex flex-col justify-center cursor-pointer group">
       {/* Invisible Link Overlay */}
       {project.link && (
-        <a 
-          href={project.link} 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
           className="absolute inset-0 z-50 rounded-xl"
           data-cursor-label="VISIT" // Shows VISIT on custom cursor when hovered
           aria-label={`Visit project ${project.title}`}
@@ -162,7 +257,10 @@ export default function Projects() {
   });
 
   // Ribbon rotation: full 360 degrees over section scroll
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+  });
   const ribbonRotateY = useTransform(smoothProgress, [0, 1], [0, 360]);
   const ribbonY = useTransform(smoothProgress, [0, 1], [0, -100]);
 
@@ -171,33 +269,30 @@ export default function Projects() {
     const unsubscribe = scrollYProgress.on("change", (v) => {
       const total = projects.length;
       const step = 1 / total;
-      
+
       // Calculate current project index with a small buffer
       let index = Math.floor(v / step);
       index = Math.max(0, Math.min(index, total - 1));
-      
+
       setActiveIndex(index);
     });
     return unsubscribe;
   }, [scrollYProgress, projects.length]);
 
   return (
-    <section
-      ref={sectionRef}
-      id="projects"
-      className="section-white relative"
-    >
+    <section ref={sectionRef} id="projects" className="section-white relative">
       <style jsx>{`
         section {
           height: auto;
         }
         @media (min-width: 768px) {
           section {
-            height: ${projects.length * 75}vh !important; /* 75vh per project = 50% less total scroll */
+            height: ${projects.length *
+            75}vh !important; /* 75vh per project = 50% less total scroll */
           }
         }
       `}</style>
-      
+
       {/* Sticky container */}
       <div className="md:sticky top-0 h-auto md:h-screen flex items-center overflow-hidden">
         {/* Section heading */}
@@ -217,19 +312,24 @@ export default function Projects() {
             className="flex items-center justify-center p-4 md:p-10 h-full w-full"
             style={{ perspective: "1500px" }}
           >
-            <div className="relative w-[280px] h-[360px] md:w-[320px] md:h-[440px]" style={{ transformStyle: "preserve-3d" }}>
+            <div
+              className="relative w-[280px] h-[360px] md:w-[320px] md:h-[440px]"
+              style={{ transformStyle: "preserve-3d" }}
+            >
               {projects.map((project, i) => {
                 const indexDiff = i - activeIndex;
                 const isPast = indexDiff < 0;
-                
+
                 // Randomize stack angles organically, but deterministically
-                const rotateZSeed = (i % 2 === 0 ? 1 : -1) * (i % 3 + 1) * 2;
+                const rotateZSeed = (i % 2 === 0 ? 1 : -1) * ((i % 3) + 1) * 2;
 
                 return (
                   <motion.div
                     key={project.id}
                     className={`absolute inset-0 rounded-[24px] md:rounded-[32px] p-8 flex flex-col justify-between shadow-[0_30px_60px_rgba(0,0,0,0.12)] transition-colors duration-500 overflow-hidden ${
-                      indexDiff === 0 ? "bg-black text-white border border-white/10" : "bg-gray-50 text-black border border-black/5"
+                      indexDiff === 0
+                        ? "bg-black text-white border border-white/10"
+                        : "bg-gray-50 text-black border border-black/5"
                     }`}
                     initial={false}
                     animate={{
@@ -237,46 +337,62 @@ export default function Projects() {
                       y: isPast ? -800 : indexDiff * 30,
                       rotateX: isPast ? 45 : indexDiff * 5,
                       rotateZ: isPast ? -25 : indexDiff === 0 ? 0 : rotateZSeed,
-                      opacity: isPast ? 0 : 1 - (indexDiff * 0.15),
+                      opacity: isPast ? 0 : 1 - indexDiff * 0.15,
                       scale: isPast ? 1.4 : 1,
                     }}
                     transition={{
                       type: "spring",
                       stiffness: 160,
                       damping: 18,
-                      mass: 0.8
+                      mass: 0.8,
                     }}
                     style={{
-                      transformOrigin: "bottom center"
+                      transformOrigin: "bottom center",
                     }}
                   >
                     {/* Inner Card Content */}
                     <div className="flex justify-between items-start z-10">
-                      <span className={`font-display italic text-6xl md:text-7xl leading-none ${indexDiff === 0 ? 'text-white/40' : 'text-black/20'}`}>
+                      <span
+                        className={`font-display italic text-6xl md:text-7xl leading-none ${indexDiff === 0 ? "text-white/40" : "text-black/20"}`}
+                      >
                         {project.number}
                       </span>
                       {indexDiff === 0 && (
-                        <motion.div 
+                        <motion.div
                           className="w-3 h-3 rounded-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)] mt-2"
                           initial={{ scale: 0 }}
                           animate={{ scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }}
-                          transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 2.5,
+                            ease: "easeInOut",
+                          }}
                         />
                       )}
                     </div>
 
                     <div className="space-y-4 z-10">
-                       <h4 className="font-ui uppercase tracking-widest text-2xl font-bold leading-[1.1]">
-                         {project.title}
-                       </h4>
-                       <div className={`h-px w-full ${indexDiff === 0 ? 'bg-white/20' : 'bg-black/10'}`} />
-                       <p className={`font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] ${indexDiff === 0 ? 'text-white/60' : 'text-black/40'}`}>
-                         {project.year} • {project.role.split(" ")[0]}
-                       </p>
+                      <h4 className="font-ui uppercase tracking-widest text-2xl font-bold leading-[1.1]">
+                        {project.title}
+                      </h4>
+                      <div
+                        className={`h-px w-full ${indexDiff === 0 ? "bg-white/20" : "bg-black/10"}`}
+                      />
+                      <p
+                        className={`font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] ${indexDiff === 0 ? "text-white/60" : "text-black/40"}`}
+                      >
+                        {project.year} • {project.role.split(" ")[0]}
+                      </p>
                     </div>
 
                     {/* Noise texture overlay for a premium print feel */}
-                    <div className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")' }} />
+                    <div
+                      className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
+                      style={{
+                        backgroundImage:
+                          'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E")',
+                      }}
+                    />
                   </motion.div>
                 );
               })}
@@ -294,16 +410,11 @@ export default function Projects() {
                 transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
                 className="w-full"
               >
-                <ProjectPanel
-                  project={projects[activeIndex]}
-                  direction={1}
-                />
+                <ProjectPanel project={projects[activeIndex]} direction={1} />
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
-
-
 
         {/* Mobile: Project cards stacked */}
         <div className="md:hidden w-full px-6 pt-32 pb-20">
@@ -316,18 +427,20 @@ export default function Projects() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{
                 duration: 0.6,
-                delay: i % 3 * 0.1,
+                delay: (i % 3) * 0.1,
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <ProjectPanel project={project} direction={1} />
+              <ProjectPanel project={project} direction={0} />
             </motion.div>
           ))}
         </div>
 
         {/* Project counter (Desktop only) */}
         <div className="hidden md:block absolute bottom-8 right-10 font-mono text-xs text-black/40 tracking-widest">
-          <span className="text-black">{String(activeIndex + 1).padStart(2, "0")}</span>
+          <span className="text-black">
+            {String(activeIndex + 1).padStart(2, "0")}
+          </span>
           <span> / {String(projects.length).padStart(2, "0")}</span>
         </div>
       </div>
